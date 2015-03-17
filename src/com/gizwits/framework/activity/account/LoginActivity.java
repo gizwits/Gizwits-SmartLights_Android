@@ -29,7 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.device.DeviceListActivity;
 import com.xpg.common.system.IntentUtils;
@@ -135,7 +135,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 	/*
 	 * @see
-	 * com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle
+	 * com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle
 	 * )
 	 */
 	/* (non-Javadoc)

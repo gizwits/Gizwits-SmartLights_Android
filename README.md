@@ -46,9 +46,9 @@ Gizwits Air Condition Android Demo App
 项目工程结构
 
 ▪包结构说明
-com.gizwits.aircondition                             -智能云空调独有代码，包含控制部分和侧边栏部分
-com.gizwits.aircondition.activity.control            -智能云空调控制界面activity
-com.gizwits.aircondition.activity.slipbar            -智能云空调侧边栏activity
+com.gizwits.centercontrolled                             -智能云空调独有代码，包含控制部分和侧边栏部分
+com.gizwits.centercontrolled.activity.control            -智能云空调控制界面activity
+com.gizwits.centercontrolled.activity.slipbar            -智能云空调侧边栏activity
 
 com.gizwits.framework                                -机智云设备开源APP框架,包含除控制界面Activity外的代码，暂时机智云实验室中的其他开源APP所用框架一致
 com.gizwits.framework.activity                       -机智云设备开源APP框架相关activity

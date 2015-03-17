@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.device.DeviceListActivity;
 import com.xpg.common.system.IntentUtils;
@@ -165,7 +165,7 @@ public class AirlinkActivity extends BaseActivity implements OnClickListener {
     /*
      * (non-Javadoc)
      *
-     * @see com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle)
+     * @see com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

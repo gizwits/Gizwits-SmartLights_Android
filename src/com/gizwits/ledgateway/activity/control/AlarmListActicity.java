@@ -1,7 +1,7 @@
 /**
  * Project Name:XPGSdkV4AppBase
  * File Name:AlarmListActicity.java
- * Package Name:com.gizwits.aircondition.activity.control
+ * Package Name:com.gizwits.centercontrolled.activity.control
  * Date:2015-1-27 14:43:57
  * Copyright (c) 2014~2015 Xtreme Programming Group, Inc.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
@@ -15,7 +15,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.gizwits.aircondition.activity.control;
+package com.gizwits.ledgateway.activity.control;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.adapter.AlarmListAdapter;
 import com.gizwits.framework.entity.DeviceAlarm;

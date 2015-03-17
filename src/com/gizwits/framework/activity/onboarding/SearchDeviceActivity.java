@@ -44,7 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.adapter.SearchListAdapter;
 import com.gizwits.framework.utils.DialogManager;
@@ -182,7 +182,7 @@ public class SearchDeviceActivity extends BaseActivity implements
     /*
      * (non-Javadoc)
      *
-     * @see com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle)
+     * @see com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

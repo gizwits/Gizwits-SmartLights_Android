@@ -1,7 +1,7 @@
 /**
  * Project Name:XPGSdkV4AppBase
  * File Name:CurveActivity.java
- * Package Name:com.gizwits.aircondition.activity.control
+ * Package Name:com.gizwits.centercontrolled.activity.control
  * Date:2015-1-27 14:44:03
  * Copyright (c) 2014~2015 Xtreme Programming Group, Inc.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
@@ -15,14 +15,14 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.gizwits.aircondition.activity.control;
+package com.gizwits.ledgateway.activity.control;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 
 // TODO: Auto-generated Javadoc
@@ -47,7 +47,7 @@ public class CurveActivity extends BaseActivity {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle
+	 * com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle
 	 * )
 	 */
 	@Override

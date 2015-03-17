@@ -37,7 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.xpg.common.useful.NetworkUtils;
 import com.xpg.common.useful.StringUtils;
@@ -121,7 +121,7 @@ public class AutoConfigActivity extends BaseActivity implements OnClickListener 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle)
+	 * @see com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

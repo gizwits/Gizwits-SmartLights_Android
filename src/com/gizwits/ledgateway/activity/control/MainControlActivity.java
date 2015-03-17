@@ -1,7 +1,7 @@
 /**
  * Project Name:XPGSdkV4AppBase
  * File Name:MainControlActivity.java
- * Package Name:com.gizwits.aircondition.activity.control
+ * Package Name:com.gizwits.centercontrolled.activity.control
  * Date:2015-1-27 14:44:17
  * Copyright (c) 2014~2015 Xtreme Programming Group, Inc.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
@@ -15,7 +15,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.gizwits.aircondition.activity.control;
+package com.gizwits.ledgateway.activity.control;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +52,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.gizwits.aircondition.R;
+import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.account.UserManageActivity;
 import com.gizwits.framework.activity.device.DeviceListActivity;
@@ -429,7 +429,7 @@ public class MainControlActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.aircondition.activity.BaseActivity#onCreate(android.os.Bundle
+	 * com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle
 	 * )
 	 */
 	@Override
@@ -444,7 +444,7 @@ public class MainControlActivity extends BaseActivity implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.gizwits.aircondition.activity.BaseActivity#onResume()
+	 * @see com.gizwits.centercontrolled.activity.BaseActivity#onResume()
 	 */
 	@Override
 	public void onResume() {
@@ -1031,7 +1031,7 @@ public class MainControlActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.aircondition.activity.BaseActivity#didReceiveData(com.xtremeprog
+	 * com.gizwits.centercontrolled.activity.BaseActivity#didReceiveData(com.xtremeprog
 	 * .xpgconnect.XPGWifiDevice, java.util.concurrent.ConcurrentHashMap, int)
 	 */
 	@Override
@@ -1063,7 +1063,7 @@ public class MainControlActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.aircondition.activity.BaseActivity#didDisconnected(com.xtremeprog
+	 * com.gizwits.centercontrolled.activity.BaseActivity#didDisconnected(com.xtremeprog
 	 * .xpgconnect.XPGWifiDevice)
 	 */
 	@Override
