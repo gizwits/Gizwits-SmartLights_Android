@@ -27,7 +27,7 @@ import com.gizwits.framework.activity.device.DeviceListActivity;
 import com.gizwits.framework.utils.StringUtils;
 import com.xpg.common.system.IntentUtils;
 
-// TODO: Auto-generated Javadoc
+// TODO: Auto-generated Javadoc.
 /**
  * Created by Lien on 14/12/16.
  * 
