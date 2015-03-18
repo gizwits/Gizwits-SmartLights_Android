@@ -15,7 +15,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.gizwits.ledgateway.activity.control;
+package com.gizwits.ledgateway.activity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,7 +79,7 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  * 
  * @author Lien
  */
-public class MainControlActivity extends BaseActivity implements
+public class MainListActivity extends BaseActivity implements
 		OnClickListener, OnCheckedChangeListener,
 		CompoundButton.OnCheckedChangeListener {
 
@@ -353,7 +353,7 @@ public class MainControlActivity extends BaseActivity implements
 					if (isNeedDialog) {
 						if (mFaultDialog == null) {
 							mFaultDialog = DialogManager.getDeviceErrirDialog(
-									MainControlActivity.this, "设备故障",
+									MainListActivity.this, "设备故障",
 									new OnClickListener() {
 
 										@Override
@@ -392,12 +392,12 @@ public class MainControlActivity extends BaseActivity implements
 			case LOGIN_FAIL:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
 				progressDialog.cancel();
-				ToastUtils.showShort(MainControlActivity.this, "设备连接失败");
+				ToastUtils.showShort(MainListActivity.this, "设备连接失败");
 				break;
 			case LOGIN_TIMEOUT:
 				isTimeOut = true;
 				progressDialog.cancel();
-				ToastUtils.showShort(MainControlActivity.this, "设备连接超时");
+				ToastUtils.showShort(MainListActivity.this, "设备连接超时");
 				break;
 			}
 		}
@@ -539,7 +539,7 @@ public class MainControlActivity extends BaseActivity implements
 					@Override
 					public void onClick(View arg0) {
 						mCenter.cSwitchOn(mXpgWifiDevice, false);
-						DialogManager.dismissDialog(MainControlActivity.this,
+						DialogManager.dismissDialog(MainListActivity.this,
 								mPowerOffDialog);
 					}
 				});
@@ -548,7 +548,7 @@ public class MainControlActivity extends BaseActivity implements
 		lvDevice = (ListView) findViewById(R.id.lvDevice);
 		lvDevice.setAdapter(mAdapter);
 
-		progressDialog = new ProgressDialog(MainControlActivity.this);
+		progressDialog = new ProgressDialog(MainListActivity.this);
 		progressDialog.setCancelable(false);
 		progressDialog.setMessage("设备连接中，请稍候。");
 	}
@@ -789,7 +789,7 @@ public class MainControlActivity extends BaseActivity implements
 		case R.id.rlAlarmTips:
 		case R.id.tvTitle:
 			if (alarmList != null && alarmList.size() > 0) {
-				Intent intent = new Intent(MainControlActivity.this,
+				Intent intent = new Intent(MainListActivity.this,
 						AlarmListActicity.class);
 				intent.putExtra("alarm_list", alarmList);
 				startActivity(intent);
@@ -802,7 +802,7 @@ public class MainControlActivity extends BaseActivity implements
 			isShow = false;
 			break;
 		case R.id.tvCurve:
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					CurveActivity.class);
 			break;
 		}
@@ -811,25 +811,25 @@ public class MainControlActivity extends BaseActivity implements
 	public void onClickSlipBar(View view) {
 		switch (view.getId()) {
 		case R.id.rlDevice:
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					DeviceManageListActivity.class);
 			break;
 		case R.id.rlAbout:
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					AboutActivity.class);
 			break;
 		case R.id.rlAccount:
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					UserManageActivity.class);
 			break;
 		case R.id.rlHelp:
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					HelpActivity.class);
 			break;
 		case R.id.btnDeviceList:
 			mCenter.cDisconnect(mXpgWifiDevice);
 			DisconnectOtherDevice();
-			IntentUtils.getInstance().startActivity(MainControlActivity.this,
+			IntentUtils.getInstance().startActivity(MainListActivity.this,
 					DeviceListActivity.class);
 			finish();
 			break;
