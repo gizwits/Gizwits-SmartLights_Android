@@ -43,5 +43,5 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
-	}
-}
+
+}}

@@ -46,8 +46,9 @@
         <activity android:name="com.gizwits.framework.activity.account.ChangePswActivity" />
         <activity android:name="com.gizwits.framework.activity.account.ForgetPswActivity" />
         <activity android:name="com.gizwits.framework.activity.account.UserManageActivity" />
-        <activity android:name="com.gizwits.framework.activity.device.DeviceListActivity" 
-            	android:launchMode="singleTask"/>
+        <activity
+            android:name="com.gizwits.framework.activity.device.DeviceListActivity"
+            android:launchMode="singleTask" />
         <activity android:name="com.gizwits.framework.activity.device.DeviceManageListActivity" />
         <activity android:name="com.gizwits.framework.activity.device.DeviceManageDetailActivity" />
         <activity android:name="com.gizwits.framework.activity.onboarding.AirlinkActivity" />
@@ -55,20 +56,23 @@
         <activity android:name="com.gizwits.framework.activity.onboarding.BindingDeviceActivity" />
         <activity android:name="com.gizwits.framework.activity.onboarding.ConfigFailedActivity" />
         <activity android:name="com.gizwits.framework.activity.onboarding.GetPassAndBind" />
-        <activity android:name="com.gizwits.framework.activity.onboarding.SearchDeviceActivity"
+        <activity
+            android:name="com.gizwits.framework.activity.onboarding.SearchDeviceActivity"
             android:launchMode="singleTask" />
         <activity android:name="com.gizwits.framework.activity.onboarding.SoftApConfigActivity" />
         <activity android:name="com.gizwits.framework.activity.help.AboutActivity" />
         <activity android:name="com.gizwits.framework.activity.help.HelpActivity" />
         <activity
             android:name="zxing.CaptureActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
         <activity android:name="com.gizwits.centercontrolled.activity.slipbar.SlipBarActivity" />
-        <activity android:name="com.gizwits.ledgateway.activity.MainListActivity"
+        <activity
+            android:name="com.gizwits.ledgateway.activity.MainListActivity"
             android:launchMode="singleTask" />
-        <activity android:name="com.gizwits.ledgateway.activity.AlarmListActicity" />
-        <activity android:name="com.gizwits.ledgateway.activity.CurveActivity" />
+        <activity android:name="com.gizwits.ledgateway.activity.AddSubDeviceActivity" />
+        <activity android:name="com.gizwits.ledgateway.activity.EditGroupActivity" />
+        <activity android:name="com.gizwits.ledgateway.activity.TestActivity" />
     </application>
 
 </manifest>

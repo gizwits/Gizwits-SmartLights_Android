@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/llTop"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <Button
+            android:id="@+id/btnAddSubDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加子设备" />
+
+        <Button
+            android:id="@+id/btnGetSubDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取子设备列表" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvSubDevices"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llBottom"
+        android:layout_below="@+id/llTop" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical" >
+
+        <ToggleButton
+            android:id="@+id/tbtnSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <SeekBar
+            android:id="@+id/sbLightness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:max="255" />
+    </LinearLayout>
+
+</RelativeLayout>
