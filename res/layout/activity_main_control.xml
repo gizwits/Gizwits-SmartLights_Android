@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gizwits.framework.widget.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="#ffffff"
+    android:orientation="vertical"
     android:scrollbars="none" >
 
     <LinearLayout
@@ -11,7 +12,7 @@
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
 
-        <include layout="@layout/activity_slibbar" />
+        <!-- <include layout="@layout/activity_slibbar" /> -->
         <!-- id starts with @+id/split_conditioner_control_ -->
 
         <RelativeLayout
@@ -477,4 +478,4 @@
         </RelativeLayout>
     </LinearLayout>
 
-</com.gizwits.framework.widget.SlidingMenu>
+</LinearLayout>
