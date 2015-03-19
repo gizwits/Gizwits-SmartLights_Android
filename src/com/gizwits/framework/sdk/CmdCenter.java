@@ -26,22 +26,24 @@ import android.util.Log;
 import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.config.JsonKeys;
 import com.xpg.common.useful.StringUtils;
+import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
+import com.xtremeprog.xpgconnect.XPGWifiGroup;
 import com.xtremeprog.xpgconnect.XPGWifiSDK;
 import com.xtremeprog.xpgconnect.XPGWifiSDK.XPGWifiConfigureMode;
+import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
 
 // TODO: Auto-generated Javadoc
 
 /**
  * ClassName: Class CmdCenter. <br/>
- * 控制指令类
- * <br/>
+ * 控制指令类 <br/>
  * date: 2014-12-15 12:09:02 <br/>
  * 
  * @author Lien
  */
 public class CmdCenter {
-	
+
 	/** The Constant TAG. */
 	private static final String TAG = "CmdCenter";
 
@@ -130,9 +132,11 @@ public class CmdCenter {
 
 	/**
 	 * C register mail user.
-	 *
-	 * @param mailAddr the mail addr
-	 * @param password the password
+	 * 
+	 * @param mailAddr
+	 *            the mail addr
+	 * @param password
+	 *            the password
 	 */
 	public void cRegisterMailUser(String mailAddr, String password) {
 		xpgWifiGCC.registerUserByEmail(mailAddr, password);
@@ -198,8 +202,9 @@ public class CmdCenter {
 
 	/**
 	 * 根据邮箱修改密码.
-	 *
-	 * @param email            邮箱地址
+	 * 
+	 * @param email
+	 *            邮箱地址
 	 */
 	public void cChangePassworfByEmail(String email) {
 		xpgWifiGCC.changeUserPasswordByEmail(email);
@@ -282,10 +287,13 @@ public class CmdCenter {
 
 	/**
 	 * 发送指令.
-	 *
-	 * @param xpgWifiDevice            the xpg wifi device
-	 * @param key the key
-	 * @param value the value
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
 	 */
 	public void cWrite(XPGWifiDevice xpgWifiDevice, String key, Object value) {
 
@@ -305,8 +313,9 @@ public class CmdCenter {
 
 	/**
 	 * 获取设备状态.
-	 *
-	 * @param xpgWifiDevice            the xpg wifi device
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
 	 */
 	public void cGetStatus(XPGWifiDevice xpgWifiDevice) {
 		JSONObject json = new JSONObject();
@@ -366,14 +375,115 @@ public class CmdCenter {
 
 	// =================================================================
 	//
-	// 智能云空调控制相关
+	// 中控网关相关
+	//
+	// =================================================================
+
+	/**
+	 * 获取子设备列表.
+	 * 
+	 * @param centralControlDevice
+	 *            中控设备类
+	 */
+	public void cGetSubDevicesList(
+			XPGWifiCentralControlDevice centralControlDevice) {
+		centralControlDevice.getSubDevices();
+	}
+
+	/**
+	 * 添加子设备.
+	 * 
+	 * @param centralControlDevice
+	 *            中控设备类
+	 */
+	public void cAddSubDevice(XPGWifiCentralControlDevice centralControlDevice) {
+		centralControlDevice.addSubDevice();
+	}
+
+	/**
+	 * 删除子设备.
+	 * 
+	 * @param centralControlDevice
+	 *            中控设备类
+	 * @param subDevice
+	 *            子设备类
+	 */
+	public void cDeleteSubDevice(
+			XPGWifiCentralControlDevice centralControlDevice,
+			XPGWifiSubDevice subDevice) {
+		centralControlDevice.deleteSubDevice(subDevice.getSubDid());
+	}
+
+	/**
+	 * 获取分组列表
+	 * 
+	 * @param uid
+	 *            用户id
+	 * @param token
+	 *            授权令牌
+	 * @param specialProductKey
+	 *            指定productkey
+	 * */
+	public void cGetGroups(String uid, String token,
+			String... specialProductKey) {
+		xpgWifiGCC.getGroups(uid, token, specialProductKey);
+	}
+
+	/**
+	 * 删除分组
+	 * 
+	 * @param uid
+	 *            用户id
+	 * @param token
+	 *            授权令牌
+	 * @param xpgWifiGroup
+	 *            分组类
+	 * */
+	public void cDeleteGroups(String uid, String token,
+			XPGWifiGroup xpgWifiGroup) {
+		xpgWifiGCC.removeGroup(uid, token, xpgWifiGroup.gid);
+	}
+
+	/**
+	 * 添加子设备到分组
+	 * 
+	 * @param xpgWifiGroup
+	 *            组
+	 * @param xpgWifiSubDevice
+	 *            子设备
+	 * */
+	public void cAddToGroup(XPGWifiGroup xpgWifiGroup,
+			XPGWifiSubDevice xpgWifiSubDevice) {
+		xpgWifiGroup.addDevice(xpgWifiSubDevice.getDid(),
+				xpgWifiSubDevice.getSubDid());
+	}
+
+	/**
+	 * 从分组删除子设备
+	 * 
+	 * @param xpgWifiGroup
+	 *            组
+	 * @param xpgWifiSubDevice
+	 *            子设备
+	 * */
+	public void cRemoveFromGroup(XPGWifiGroup xpgWifiGroup,
+			XPGWifiSubDevice xpgWifiSubDevice) {
+		xpgWifiGroup.removeDevice(xpgWifiSubDevice.getDid(),
+				xpgWifiSubDevice.getSubDid());
+	}
+
+	// =================================================================
+	//
+	// 智能灯网关控制相关
 	//
 	// =================================================================
 	/**
 	 * C switch on.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param isOn the is on
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 * @param isOn
+	 *            the is on
 	 */
 	public void cSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
 		cWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
@@ -381,68 +491,28 @@ public class CmdCenter {
 	}
 
 	/**
-	 * C set shake.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param isOn the is on
+	 * lightness.
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 * @param lightness
+	 *            亮度级别
 	 */
-	public void cSetShake(XPGWifiDevice xpgWifiDevice, boolean isOn) {
-		cWrite(xpgWifiDevice, JsonKeys.FAN_SHAKE, isOn);
+	public void cLightness(XPGWifiDevice xpgWifiDevice, int lightness) {
+		cWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
 		cGetStatus(xpgWifiDevice);
 	}
 
 	/**
-	 * C mode.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param mode the mode
+	 * C switch on.
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 * @param isOn
+	 *            the is on
 	 */
-	public void cMode(XPGWifiDevice xpgWifiDevice, int mode) {
-		cWrite(xpgWifiDevice, JsonKeys.MODE, mode);
-		cGetStatus(xpgWifiDevice);
-	}
-
-	/**
-	 * C fan speed.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param fanSpeed the fan speed
-	 */
-	public void cFanSpeed(XPGWifiDevice xpgWifiDevice, int fanSpeed) {
-		cWrite(xpgWifiDevice, JsonKeys.FAN_SPEED, fanSpeed);
-		cGetStatus(xpgWifiDevice);
-	}
-
-	/**
-	 * C time on.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param time the time
-	 */
-	public void cTimeOn(XPGWifiDevice xpgWifiDevice, int time) {
-		cWrite(xpgWifiDevice, JsonKeys.TIME_ON, time);
-		cGetStatus(xpgWifiDevice);
-	}
-
-	/**
-	 * C time off.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param time the time
-	 */
-	public void cTimeOff(XPGWifiDevice xpgWifiDevice, int time) {
-		cWrite(xpgWifiDevice, JsonKeys.TIME_OFF, time);
-		cGetStatus(xpgWifiDevice);
-	}
-
-	/**
-	 * C set temp.
-	 *
-	 * @param xpgWifiDevice the xpg wifi device
-	 * @param templature the templature
-	 */
-	public void cSetTemp(XPGWifiDevice xpgWifiDevice, int templature) {
-		cWrite(xpgWifiDevice, JsonKeys.SET_TEMP, templature);
+	public void cSwitchOnAll(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+		cWrite(xpgWifiDevice, JsonKeys.ON_OFF_ALL, isOn);
 		cGetStatus(xpgWifiDevice);
 	}
 

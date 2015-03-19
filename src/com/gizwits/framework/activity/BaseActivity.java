@@ -82,7 +82,6 @@ public class BaseActivity extends Activity {
 	 * 设备属性监听器。 设备连接断开、获取绑定参数、获取设备信息、控制和接受设备信息相关.
 	 */
 	protected XPGWifiDeviceListener deviceListener = new XPGWifiDeviceListener() {
-
 		@Override
 		public void didDeviceOnline(XPGWifiDevice device, boolean isOnline) {
 			BaseActivity.this.didDeviceOnline(device, isOnline);
@@ -112,6 +111,7 @@ public class BaseActivity extends Activity {
 	 * sdk监听器。 配置设备上线、注册登录用户、搜索发现设备、用户绑定和解绑设备相关.
 	 */
 	private XPGWifiSDKListener sdkListener = new XPGWifiSDKListener() {
+		
 
 		@Override
 		public void didBindDevice(int error, String errorMessage, String did) {
