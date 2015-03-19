@@ -79,9 +79,8 @@ import com.xtremeprog.xpgconnect.XPGWifiDevice;
  * 
  * @author Lien
  */
-public class MainListActivity extends BaseActivity implements
-		OnClickListener, OnCheckedChangeListener,
-		CompoundButton.OnCheckedChangeListener {
+public class MainListActivity extends BaseActivity implements OnClickListener,
+		OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
 
 	/** The tag. */
 	private final String TAG = "MainControlActivity";
@@ -306,31 +305,36 @@ public class MainListActivity extends BaseActivity implements
 				}
 			case UPDATE_UI:
 				if (statuMap != null && statuMap.size() > 0) {
-					setListenNull(true);
-					updateTemperatureUnit(isCentigrade);
-					updatePowerSwitch((Boolean) statuMap.get(JsonKeys.ON_OFF));
-					updateModeState((String) statuMap.get(JsonKeys.MODE));
-					String setTemp = (String) statuMap.get(JsonKeys.SET_TEMP);
-					if (!StringUtils.isEmpty(setTemp)) {
-						ubdateSeekBar(Short.parseShort(setTemp));
-					}
-					String roomTemp = (String) statuMap.get(JsonKeys.ROOM_TEMP);
-					if (!StringUtils.isEmpty(roomTemp)) {
-						updateInnerTemp(Short.parseShort(roomTemp));
-					}
-
-					String timeOn = (String) statuMap.get(JsonKeys.TIME_ON);
-					if (!StringUtils.isEmpty(timeOn)) {
-						updateOnTime(Integer.parseInt(timeOn));
-					}
-					String timeOff = (String) statuMap.get(JsonKeys.TIME_OFF);
-					if (!StringUtils.isEmpty(timeOff)) {
-						updateOffTime(Integer.parseInt(timeOff));
-					}
-					updateFanSpeed((String) statuMap.get(JsonKeys.FAN_SPEED));
-					updateShakeSwitch((Boolean) statuMap
-							.get(JsonKeys.FAN_SHAKE));
-					setListenNull(false);
+					// setListenNull(true);
+					// updateTemperatureUnit(isCentigrade);
+					// updatePowerSwitch((Boolean)
+					// statuMap.get(JsonKeys.ON_OFF));
+					// updateModeState((String) statuMap.get(JsonKeys.MODE));
+					// String setTemp = (String)
+					// statuMap.get(JsonKeys.SET_TEMP);
+					// if (!StringUtils.isEmpty(setTemp)) {
+					// ubdateSeekBar(Short.parseShort(setTemp));
+					// }
+					// String roomTemp = (String)
+					// statuMap.get(JsonKeys.ROOM_TEMP);
+					// if (!StringUtils.isEmpty(roomTemp)) {
+					// updateInnerTemp(Short.parseShort(roomTemp));
+					// }
+					//
+					// String timeOn = (String) statuMap.get(JsonKeys.TIME_ON);
+					// if (!StringUtils.isEmpty(timeOn)) {
+					// updateOnTime(Integer.parseInt(timeOn));
+					// }
+					// String timeOff = (String)
+					// statuMap.get(JsonKeys.TIME_OFF);
+					// if (!StringUtils.isEmpty(timeOff)) {
+					// updateOffTime(Integer.parseInt(timeOff));
+					// }
+					// updateFanSpeed((String)
+					// statuMap.get(JsonKeys.FAN_SPEED));
+					// updateShakeSwitch((Boolean) statuMap
+					// .get(JsonKeys.FAN_SHAKE));
+					// setListenNull(false);
 				}
 				break;
 			case ALARM:
@@ -384,7 +388,7 @@ public class MainListActivity extends BaseActivity implements
 			case LOGIN_SUCCESS:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
 				progressDialog.cancel();
-				if (mView.isOpen()){
+				if (mView.isOpen()) {
 					mView.toggle();
 				}
 				mCenter.cGetStatus(mXpgWifiDevice);
@@ -429,8 +433,8 @@ public class MainListActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os.Bundle
-	 * )
+	 * com.gizwits.centercontrolled.activity.BaseActivity#onCreate(android.os
+	 * .Bundle )
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -457,7 +461,7 @@ public class MainListActivity extends BaseActivity implements
 				mAdapter.setChoosedPos(i);
 		}
 		mAdapter.notifyDataSetChanged();
-		
+
 		mXpgWifiDevice.setListener(deviceListener);
 		isCentigrade = setmanager.getUnit();
 		alarmShowList.clear();
@@ -519,7 +523,7 @@ public class MainListActivity extends BaseActivity implements
 		seekBar.setSeekBarChangeListener(new CircularSeekBar.OnSeekChangeListener() {
 			@Override
 			public void onProgressChange(CircularSeekBar view, int newProgress) {
-				mCenter.cSetTemp(mXpgWifiDevice, temperatureC);
+				// mCenter.cSetTemp(mXpgWifiDevice, temperatureC);
 			}
 		});
 		seekBar.setSeekContinueChangeListener(new CircularSeekBar.OnSeekContinueChangeListener() {
@@ -628,17 +632,17 @@ public class MainListActivity extends BaseActivity implements
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		switch (checkedId) {
 		// 设置低风
-		case R.id.rbWindLow:
-			mCenter.cFanSpeed(mXpgWifiDevice, 0);
-			break;
-		// 设置中风
-		case R.id.rbWindMin:
-			mCenter.cFanSpeed(mXpgWifiDevice, 1);
-			break;
-		// 设置高风
-		case R.id.rbWindHigh:
-			mCenter.cFanSpeed(mXpgWifiDevice, 2);
-			break;
+		// case R.id.rbWindLow:
+		// mCenter.cFanSpeed(mXpgWifiDevice, 0);
+		// break;
+		// // 设置中风
+		// case R.id.rbWindMin:
+		// mCenter.cFanSpeed(mXpgWifiDevice, 1);
+		// break;
+		// // 设置高风
+		// case R.id.rbWindHigh:
+		// mCenter.cFanSpeed(mXpgWifiDevice, 2);
+		// break;
 
 		}
 
@@ -655,7 +659,7 @@ public class MainListActivity extends BaseActivity implements
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		switch (buttonView.getId()) {
 		case R.id.cbWindShake:// 摆风
-			mCenter.cSetShake(mXpgWifiDevice, cbWindShake.isChecked());
+			// mCenter.cSetShake(mXpgWifiDevice, cbWindShake.isChecked());
 			break;
 		default:
 			break;
@@ -763,7 +767,7 @@ public class MainListActivity extends BaseActivity implements
 						@Override
 						public void timingChosen(int time) {
 							// 设置定时开机时间
-							mCenter.cTimeOff(mXpgWifiDevice, time);
+							// mCenter.cTimeOff(mXpgWifiDevice, time);
 							timingOff = time;
 							tvTimeOff.setText(timingOff > 0 ? timingOff
 									+ "小时后关机" : "定时关机");
@@ -778,7 +782,7 @@ public class MainListActivity extends BaseActivity implements
 						@Override
 						public void timingChosen(int time) {
 							// 设置定时开机时间
-							mCenter.cTimeOn(mXpgWifiDevice, time);
+							// mCenter.cTimeOn(mXpgWifiDevice, time);
 							timingOn = time;
 							tvPowerOnStr.setText(timingOn > 0 ? timingOn
 									+ "小时后开机" : "定时开机");
@@ -789,10 +793,10 @@ public class MainListActivity extends BaseActivity implements
 		case R.id.rlAlarmTips:
 		case R.id.tvTitle:
 			if (alarmList != null && alarmList.size() > 0) {
-				Intent intent = new Intent(MainListActivity.this,
-						AlarmListActicity.class);
-				intent.putExtra("alarm_list", alarmList);
-				startActivity(intent);
+				// Intent intent = new Intent(MainListActivity.this,
+				// AlarmListActicity.class);
+				// intent.putExtra("alarm_list", alarmList);
+				// startActivity(intent);
 			}
 			break;
 		case R.id.tvUnit:
@@ -800,10 +804,6 @@ public class MainListActivity extends BaseActivity implements
 			updateTemperatureUnit(isCentigrade);
 			llBottom.setVisibility(View.GONE);
 			isShow = false;
-			break;
-		case R.id.tvCurve:
-			IntentUtils.getInstance().startActivity(MainListActivity.this,
-					CurveActivity.class);
 			break;
 		}
 	}
@@ -955,7 +955,7 @@ public class MainListActivity extends BaseActivity implements
 	 *            the pos
 	 */
 	private void sendModeReq(int pos) {
-		mCenter.cMode(mXpgWifiDevice, modeReq[pos]);
+		// mCenter.cMode(mXpgWifiDevice, modeReq[pos]);
 	}
 
 	/**
@@ -1031,8 +1031,9 @@ public class MainListActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.centercontrolled.activity.BaseActivity#didReceiveData(com.xtremeprog
-	 * .xpgconnect.XPGWifiDevice, java.util.concurrent.ConcurrentHashMap, int)
+	 * com.gizwits.centercontrolled.activity.BaseActivity#didReceiveData(com
+	 * .xtremeprog .xpgconnect.XPGWifiDevice,
+	 * java.util.concurrent.ConcurrentHashMap, int)
 	 */
 	@Override
 	protected void didReceiveData(XPGWifiDevice device,
@@ -1063,8 +1064,8 @@ public class MainListActivity extends BaseActivity implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.gizwits.centercontrolled.activity.BaseActivity#didDisconnected(com.xtremeprog
-	 * .xpgconnect.XPGWifiDevice)
+	 * com.gizwits.centercontrolled.activity.BaseActivity#didDisconnected(com
+	 * .xtremeprog .xpgconnect.XPGWifiDevice)
 	 */
 	@Override
 	protected void didDisconnected(XPGWifiDevice device) {
