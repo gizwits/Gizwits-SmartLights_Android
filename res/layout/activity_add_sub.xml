@@ -35,10 +35,5 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="QWERTYUIOPLKJHGFDSAZXCVBNMQWERTYUIOPLKJHGFDSAZXCVBNMQWERTYUIOPLKJHGFDSAZXCVBNM"/>
-    
-    <Button
-        android:id="@+id/confirm_btn"
-        style="@style/ButtonBlue"
-        android:text="@string/confirm" />
 
 </LinearLayout>

@@ -20,7 +20,7 @@ import com.gizwits.ledgateway.R;
 import com.gizwits.ledgateway.activity.MainActivity;
   
 @SuppressLint("ResourceAsColor")
-public class MListViewAdapter extends BaseAdapter {   
+public class GroupAdapter extends BaseAdapter {   
 	private Context context;
     private Map<String, List<String>> mapList;    //信息集合  
     private List<String> list;
@@ -32,7 +32,7 @@ public class MListViewAdapter extends BaseAdapter {
     
     public static int height;
        
-    public MListViewAdapter(MainActivity context, Map<String, List<String>> mapList, List<String> list) { 
+    public GroupAdapter(MainActivity context, Map<String, List<String>> mapList, List<String> list) { 
     	this.list = list;
     	this.context=context;
         listContainer = LayoutInflater.from(context);   //创建视图容器并设置上下文   

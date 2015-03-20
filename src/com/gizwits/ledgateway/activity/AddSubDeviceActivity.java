@@ -13,9 +13,6 @@ import com.gizwits.ledgateway.R;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
 
 public class AddSubDeviceActivity extends BaseActivity implements OnClickListener{
-
-	/** The btn confirm. */
-	private Button confirm_btn;
 	/** The iv back. */
 	private ImageView ivBack;
 	
@@ -50,6 +47,10 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 				mCenter.cAddSubDevice(centralControlDevice);
 				this.sendEmptyMessageDelayed(handler_key.START.ordinal(), 2000);
 				break;
+			case STOP:
+				break;
+			default:
+				break;
 
 			}
 		}
@@ -64,11 +65,9 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 	}
 	
 	private void initViews(){
-		confirm_btn = (Button) findViewById(R.id.confirm_btn);
 		ivBack = (ImageView) findViewById(R.id.ivBack);
 	}
 	private void initEvent(){
-		confirm_btn.setOnClickListener(this);
 		ivBack.setOnClickListener(this);
 	}
 
@@ -76,11 +75,8 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.confirm_btn:
-			onBackPressed();
-			break;
 		case R.id.ivBack:
-			
+			onBackPressed();
 			break;
 		}
 	}

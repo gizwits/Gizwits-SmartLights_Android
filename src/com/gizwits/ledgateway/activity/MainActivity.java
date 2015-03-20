@@ -16,14 +16,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gizwits.ledgateway.R;
-import com.gizwits.ledgateway.adapter.MListViewAdapter;
+import com.gizwits.ledgateway.adapter.GroupAdapter;
 
 public class MainActivity extends Activity implements OnClickListener {
 	Button button1;
 	Map<String, List<String>> mapList=new HashMap<String, List<String>>();
 	List<String> ledList = new ArrayList<String>();
 	List<String> list = new ArrayList<String>();
-	MListViewAdapter mlistadapter;
+	GroupAdapter mlistadapter;
 	
 	public static String showString = "";
 
@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		list.add("客厅组");
 		list.add("主人卧室组");
 		list.add("");
-		mlistadapter=new MListViewAdapter(this, mapList, list);
+		mlistadapter=new GroupAdapter(this, mapList, list);
 		listview.setAdapter(mlistadapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 
