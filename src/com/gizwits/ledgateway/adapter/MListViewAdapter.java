@@ -68,6 +68,9 @@ public class MListViewAdapter extends BaseAdapter {
         listItemView.tv=(LinearLayout) convertView.findViewById(R.id.ll_item);
         listItemView.tv.removeAllViewsInLayout();
         for (int i = 0; i < mapList.get(list.get(position)).size(); i++) {
+        	if (!MainActivity.showString.equals(list.get(position)) && i == 4) {
+				break;
+			}
         	if (i % 4 == 0) {
         		llview=new LinearLayout(context);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -83,6 +86,19 @@ public class MListViewAdapter extends BaseAdapter {
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             textview.setCompoundDrawables(null,drawable,null,null);
             llview.addView(textview); 
+            if ((i+1) % 4 > 0 && i == mapList.get(list.get(position)).size()-1) {
+				for (int j = 0; j < (i+1) % 4; j++) {
+					TextView textviews=new TextView(context);
+		            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
+		            textviews.setText("123");
+		            textviews.setGravity(Gravity.CENTER);
+		            textviews.setVisibility(View.INVISIBLE);
+		            Drawable drawables=context.getResources().getDrawable(R.drawable.lampw_framew); 
+					drawables.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+		            textviews.setCompoundDrawables(null,drawables,null,null);
+		            llview.addView(textviews); 
+				};
+			}
 		}       
         return convertView;     
     }
