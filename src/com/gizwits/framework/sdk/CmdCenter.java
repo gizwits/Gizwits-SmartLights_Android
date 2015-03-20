@@ -255,7 +255,7 @@ public class CmdCenter {
 	 *            令牌
 	 */
 	public void cGetBoundDevices(String uid, String token) {
-		xpgWifiGCC.getBoundDevices(uid, token, Configs.PRODUCT_KEY);
+		xpgWifiGCC.getBoundDevices(uid, token, Configs.PRODUCT_KEY,Configs.PRODUCT_KEY_Sub);
 		// xpgWifiSdk.getBoundDevices(uid, token);
 	}
 
@@ -310,6 +310,32 @@ public class CmdCenter {
 		}
 
 	}
+	
+	/**
+	 * 发送指令.
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
+	public void cSubWrite(XPGWifiSubDevice xpgWifiSubDevice, String key, Object value) {
+
+		try {
+			final JSONObject jsonsend = new JSONObject();
+			JSONObject jsonparam = new JSONObject();
+			jsonsend.put("cmd", 1);
+			jsonparam.put(key, value);
+			jsonsend.put(JsonKeys.KEY_ACTION, jsonparam);
+			Log.i("sendjson", jsonsend.toString());
+			xpgWifiSubDevice.write(jsonsend.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * 获取设备状态.
@@ -318,6 +344,22 @@ public class CmdCenter {
 	 *            the xpg wifi device
 	 */
 	public void cGetStatus(XPGWifiDevice xpgWifiDevice) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("cmd", 2);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		xpgWifiDevice.write(json.toString());
+	}
+	
+	/**
+	 * 获取设备状态.
+	 * 
+	 * @param xpgWifiDevice
+	 *            the xpg wifi device
+	 */
+	public void cSubGetStatus(XPGWifiSubDevice xpgWifiDevice) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("cmd", 2);
@@ -485,9 +527,9 @@ public class CmdCenter {
 	 * @param isOn
 	 *            the is on
 	 */
-	public void cSwitchOn(XPGWifiDevice xpgWifiDevice, boolean isOn) {
-		cWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
-		cGetStatus(xpgWifiDevice);
+	public void cSwitchOn(XPGWifiSubDevice xpgWifiDevice, boolean isOn) {
+		cSubWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
+//		cSubGetStatus(xpgWifiDevice);
 	}
 
 	/**
@@ -498,22 +540,22 @@ public class CmdCenter {
 	 * @param lightness
 	 *            亮度级别
 	 */
-	public void cLightness(XPGWifiDevice xpgWifiDevice, int lightness) {
-		cWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
-		cGetStatus(xpgWifiDevice);
+	public void cLightness(XPGWifiSubDevice xpgWifiDevice, int lightness) {
+		cSubWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
+//		cSubGetStatus(xpgWifiDevice);
 	}
 
-	/**
-	 * C switch on.
-	 * 
-	 * @param xpgWifiDevice
-	 *            the xpg wifi device
-	 * @param isOn
-	 *            the is on
-	 */
-	public void cSwitchOnAll(XPGWifiDevice xpgWifiDevice, boolean isOn) {
-		cWrite(xpgWifiDevice, JsonKeys.ON_OFF_ALL, isOn);
-		cGetStatus(xpgWifiDevice);
-	}
+//	/**
+//	 * C switch on.
+//	 * 
+//	 * @param xpgWifiDevice
+//	 *            the xpg wifi device
+//	 * @param isOn
+//	 *            the is on
+//	 */
+//	public void cSubWrite(XPGWifiDevice xpgWifiDevice, boolean isOn) {
+//		cWrite(xpgWifiDevice, JsonKeys.ON_OFF_ALL, isOn);
+//		cGetStatus(xpgWifiDevice);
+//	}
 
 }

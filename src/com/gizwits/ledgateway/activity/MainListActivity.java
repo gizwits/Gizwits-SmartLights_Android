@@ -321,14 +321,13 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		tvCurve = (TextView) findViewById(R.id.tvCurve);
 		ctvUnit = (CheckedTextView) findViewById(R.id.tvUnit);
 		sclContent = (ScrollView) findViewById(R.id.sclContent);
-		
-		
+
 		mPowerOffDialog = DialogManager.getPowerOffDialog(this,
 				new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
-						mCenter.cSwitchOn(mXpgWifiDevice, false);
+						// mCenter.cSwitchOn(mXpgWifiDevice, false);
 						DialogManager.dismissDialog(MainListActivity.this,
 								mPowerOffDialog);
 					}
@@ -394,8 +393,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 * @Description: TODO
 	 */
 	private void setListenNull(boolean on) {
-//		cbWindShake.setOnCheckedChangeListener(on ? null : this);
-//		rgWing.setOnCheckedChangeListener(on ? null : this);
+		// cbWindShake.setOnCheckedChangeListener(on ? null : this);
+		// rgWing.setOnCheckedChangeListener(on ? null : this);
 	}
 
 	/*

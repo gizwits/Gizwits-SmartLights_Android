@@ -28,14 +28,16 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.gizwits.ledgateway.R;
 import com.gizwits.framework.sdk.CmdCenter;
 import com.gizwits.framework.sdk.SettingManager;
 import com.gizwits.framework.utils.Historys;
+import com.gizwits.ledgateway.R;
+import com.xtremeprog.xpgconnect.XPGWifiCentralControlDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiSDKListener;
 import com.xtremeprog.xpgconnect.XPGWifiSSID;
+import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,6 +78,20 @@ public class BaseActivity extends Activity {
 		};
 	};
 
+	protected XPGWifiCentralControlDeviceListener xpgWifiCentralControlDeviceListener = new XPGWifiCentralControlDeviceListener() {
+		public void didDiscovered(int error,
+				List<XPGWifiSubDevice> subDeviceList) {
+			BaseActivity.this.didSubDiscovered(error, subDeviceList);
+		};
+
+		public void didReceiveData(XPGWifiDevice device,
+				ConcurrentHashMap<String, Object> dataMap, int result) {
+
+			BaseActivity.this.didSubReceiveData(device, dataMap, result);
+
+		};
+	};
+
 	/**
 	 * XPGWifiDeviceListener
 	 * <p/>
@@ -111,7 +127,6 @@ public class BaseActivity extends Activity {
 	 * sdk监听器。 配置设备上线、注册登录用户、搜索发现设备、用户绑定和解绑设备相关.
 	 */
 	private XPGWifiSDKListener sdkListener = new XPGWifiSDKListener() {
-		
 
 		@Override
 		public void didBindDevice(int error, String errorMessage, String did) {
@@ -370,6 +385,23 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
+	 * 接收指令回调
+	 * <p/>
+	 * sdk接收到模块传入的数据回调该接口.
+	 * 
+	 * @param device
+	 *            设备对象
+	 * @param dataMap
+	 *            json数据表
+	 * @param result
+	 *            状态代码
+	 */
+	protected void didSubReceiveData(XPGWifiDevice device,
+			ConcurrentHashMap<String, Object> dataMap, int result) {
+
+	}
+
+	/**
 	 * 登陆设备结果回调接口.
 	 * 
 	 * @param device
@@ -400,6 +432,11 @@ public class BaseActivity extends Activity {
 	 *            上下线状态
 	 */
 	protected void didDeviceOnline(XPGWifiDevice device, boolean isOnline) {
+
+	}
+
+	protected void didSubDiscovered(int error,
+			List<XPGWifiSubDevice> subDeviceList) {
 
 	}
 
