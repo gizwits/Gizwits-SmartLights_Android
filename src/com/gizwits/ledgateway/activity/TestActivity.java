@@ -230,10 +230,11 @@ public class TestActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	protected void didSubReceiveData(XPGWifiDevice device,
+	protected void didSubReceiveData(XPGWifiSubDevice device,
 			ConcurrentHashMap<String, Object> dataMap, int result) {
 		// TODO Auto-generated method stub
 		super.didSubReceiveData(device, dataMap, result);
 		
 	}
+	
 }
