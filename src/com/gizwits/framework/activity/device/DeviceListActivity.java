@@ -142,7 +142,7 @@ public class DeviceListActivity extends BaseActivity implements
 			case LOGIN_SUCCESS:
 				progressDialog.cancel();
 				IntentUtils.getInstance().startActivity(
-						DeviceListActivity.this, TestActivity.class);
+						DeviceListActivity.this, MainListActivity.class);
 //				DeviceListActivity.this, MainListActivity.class);
 				break;
 

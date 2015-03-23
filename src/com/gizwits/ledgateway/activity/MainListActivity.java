@@ -18,8 +18,10 @@
 package com.gizwits.ledgateway.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONException;
@@ -27,32 +29,19 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.account.UserManageActivity;
 import com.gizwits.framework.activity.device.DeviceListActivity;
@@ -60,17 +49,16 @@ import com.gizwits.framework.activity.device.DeviceManageListActivity;
 import com.gizwits.framework.activity.help.AboutActivity;
 import com.gizwits.framework.activity.help.HelpActivity;
 import com.gizwits.framework.adapter.MenuDeviceAdapter;
-import com.gizwits.framework.config.JsonKeys;
 import com.gizwits.framework.entity.DeviceAlarm;
 import com.gizwits.framework.utils.DialogManager;
-import com.gizwits.framework.utils.StringUtils;
-import com.gizwits.framework.utils.DialogManager.OnTimingChosenListener;
-import com.gizwits.framework.widget.CircularSeekBar;
 import com.gizwits.framework.widget.SlidingMenu;
+import com.gizwits.ledgateway.R;
+import com.gizwits.ledgateway.adapter.GroupAdapter;
 import com.xpg.common.system.IntentUtils;
 import com.xpg.ui.utils.ToastUtils;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
+import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -87,13 +75,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	// private XPGWifiDevice device;
 
 	/** The scl content. */
-	private ScrollView sclContent;
+	private ListView sclContent;
 
 	/** The m view. */
 	private SlidingMenu mView;
-
-	// /** The rl control main page. */
-	private RelativeLayout rlControlMainPage;
 
 	/** The rl alarm tips. */
 	private RelativeLayout rlAlarmTips;
@@ -110,23 +95,16 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The iv back. */
 	private ImageView ivBack;
 
-	/** The tv alarm tips count. */
-	private TextView tvAlarmTipsCount;
-
-	/** The tv curve. */
-	private TextView tvCurve;
-
-	/** The ctv unit. */
-	private CheckedTextView ctvUnit;
+	/** the ListView deviceListview */
+	
+	/** */
+	private ListView listview;
 
 	/** The m adapter. */
 	private MenuDeviceAdapter mAdapter;
 
 	/** The lv device. */
 	private ListView lvDevice;
-
-	/** The is show. */
-	private boolean isShow;
 
 	/** The height. */
 	private int height;
@@ -143,17 +121,22 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The alarm list has shown. */
 	private ArrayList<String> alarmShowList;
 
-	/** The timing off. */
-	private int timingOn, timingOff;
-
-	/** The m fault dialog. */
-	private Dialog mFaultDialog;
-
 	/** The m PowerOff dialog. */
 	private Dialog mPowerOffDialog;
 
 	/** The progress dialog. */
 	private ProgressDialog progressDialog;
+
+	/** The XPGWifiCentralControlDevice centralControlDevice */
+	private XPGWifiCentralControlDevice centralControlDevice;
+	
+	/** the list device */
+	public Map<String, List<XPGWifiSubDevice>> mapList=new HashMap<String, List<XPGWifiSubDevice>>();
+	public List<XPGWifiSubDevice> ledList = new ArrayList<XPGWifiSubDevice>();
+	public List<String> list = new ArrayList<String>();
+	
+	/** the groupadapter devicelist */
+	GroupAdapter mGroupAdapter;
 
 	/** 是否超时标志位 */
 	private boolean isTimeOut = false;
@@ -288,10 +271,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 		mAdapter.notifyDataSetChanged();
 
-		mXpgWifiDevice.setListener(deviceListener);
-		alarmShowList.clear();
-		handler.sendEmptyMessage(handler_key.GET_STATUE.ordinal());
-		mCenter.cGetSubDevicesList((XPGWifiCentralControlDevice) mXpgWifiDevice);
+		Log.e("123", "123");
+		mCenter.cGetSubDevicesList(centralControlDevice);
+		
+//		handler.sendEmptyMessage(handler_key.GET_STATUE.ordinal());
 	}
 
 	/**
@@ -302,6 +285,13 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		alarmList = new ArrayList<DeviceAlarm>();
 		alarmShowList = new ArrayList<String>();
 		height = llBottom.getHeight();
+		mapList.put("我的LED", ledList);
+		list.add("我的LED");
+		mGroupAdapter = new GroupAdapter(this, mapList, list);
+		sclContent.setAdapter(mGroupAdapter);
+
+		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
+		centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
 	}
 
 	/**
@@ -309,18 +299,14 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void initViews() {
 		mView = (SlidingMenu) findViewById(R.id.main_layout);
-		rlControlMainPage = (RelativeLayout) findViewById(R.id.rlControlMainPage);
 		// rlHeader = (RelativeLayout) findViewById(R.id.rlHeader);
 		rlAlarmTips = (RelativeLayout) findViewById(R.id.rlAlarmTips);
 		// llFooter = (LinearLayout) findViewById(R.id.llFooter);
 		llBottom = (LinearLayout) findViewById(R.id.llBottom);
 		ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
-		ivBack = (ImageView) findViewById(R.id.ivBack);
-		tvAlarmTipsCount = (TextView) findViewById(R.id.tvAlarmTipsCount);
-		tvCurve = (TextView) findViewById(R.id.tvCurve);
-		ctvUnit = (CheckedTextView) findViewById(R.id.tvUnit);
-		sclContent = (ScrollView) findViewById(R.id.sclContent);
+//		ivBack = (ImageView) findViewById(R.id.ivBack);
+		sclContent = (ListView) findViewById(R.id.sclContent);
 
 		mPowerOffDialog = DialogManager.getPowerOffDialog(this,
 				new OnClickListener() {
@@ -346,22 +332,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 * Inits the events.
 	 */
 	private void initEvents() {
-
-		sclContent.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				llBottom.setVisibility(View.GONE);
-				isShow = false;
-				return false;
-			}
-		});
 		ivMenu.setOnClickListener(this);
 		rlAlarmTips.setOnClickListener(this);
 		tvTitle.setOnClickListener(this);
-		ctvUnit.setOnClickListener(this);
-		tvCurve.setOnClickListener(this);
-		ivBack.setOnClickListener(this);
 
 		lvDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -516,6 +489,24 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			ConcurrentHashMap<String, Object> dataMap, int result) {
 		this.deviceDataMap = dataMap;
 		handler.sendEmptyMessage(handler_key.RECEIVED.ordinal());
+	}
+	
+	@Override
+	protected void didSubDiscovered(int error,
+			List<XPGWifiSubDevice> subDeviceList) {
+		// TODO Auto-generated method stub
+		super.didSubDiscovered(error, subDeviceList);
+		Log.e(TAG, ""+subDeviceList.size());
+		ledList = subDeviceList;
+		mapList.put("我的LED", ledList);
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mGroupAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	/*
