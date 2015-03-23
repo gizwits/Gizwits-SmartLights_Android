@@ -24,7 +24,7 @@ import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
   
 @SuppressLint("ResourceAsColor")
 public class GroupAdapter extends BaseAdapter {   
-	private Context context;
+	private MainListActivity context;
     private Map<String, List<XPGWifiSubDevice>> mapList;    //信息集合  
     private List<String> list;
     private LayoutInflater listContainer;           //视图容器   
@@ -90,6 +90,8 @@ public class GroupAdapter extends BaseAdapter {
             Drawable drawable=context.getResources().getDrawable(R.drawable.lampw_framew); 
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             textview.setCompoundDrawables(null,drawable,null,null);
+            textview.setOnClickListener(context);
+            textview.setTag(mapList.get(list.get(position)).get(i));
             llview.addView(textview); 
             if ((i+1) % 4 > 0 && i == mapList.get(list.get(position)).size()-1) {
 				for (int j = 0; j < (i+1) % 4; j++) {

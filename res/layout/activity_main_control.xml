@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="vertical"
+    android:descendantFocusability="afterDescendants"
     android:scrollbars="none" >
 
     <LinearLayout
@@ -108,7 +109,7 @@
                         android:padding="18dp"
                         android:visibility="visible" >
                         <Button
-				            android:id="@+id/tbtnSwitch"
+				            android:id="@+id/btnSwitch"
 				            android:layout_width="wrap_content"
 				            android:layout_height="wrap_content" />
 				
@@ -117,7 +118,7 @@
 				            android:layout_width="fill_parent"
 				            android:layout_height="wrap_content"
 				            android:layout_margin="5dp"
-				            android:max="255" />
+				            android:max="255"/>
                     </LinearLayout>
                 </LinearLayout>
                 <ListView

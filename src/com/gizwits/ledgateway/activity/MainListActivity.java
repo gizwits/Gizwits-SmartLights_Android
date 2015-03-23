@@ -1,5 +1,8 @@
 /**
- * Project Name:XPGSdkV4AppBase
+lampW_frameG.png
+lampW_frameW.png
+lampY_frameG.png
+lampY_frameY.png * Project Name:XPGSdkV4AppBase
  * File Name:MainControlActivity.java
  * Package Name:com.gizwits.centercontrolled.activity.control
  * Date:2015-1-27 14:44:17
@@ -29,18 +32,24 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.account.UserManageActivity;
@@ -96,9 +105,13 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	private ImageView ivBack;
 
 	/** the ListView deviceListview */
-	
-	/** */
 	private ListView listview;
+	
+	/** the button turn on off */
+	private Button btnSwitch;
+	
+	/** the sb light adjust */
+	private SeekBar lightness;
 
 	/** The m adapter. */
 	private MenuDeviceAdapter mAdapter;
@@ -121,9 +134,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The alarm list has shown. */
 	private ArrayList<String> alarmShowList;
 
-	/** The m PowerOff dialog. */
-	private Dialog mPowerOffDialog;
-
 	/** The progress dialog. */
 	private ProgressDialog progressDialog;
 
@@ -137,6 +147,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	
 	/** the groupadapter devicelist */
 	GroupAdapter mGroupAdapter;
+	
+	/** the tv selecting tv */
+	private TextView selecttv;
+	
+	/** the XPGWifiSubDevice selcetSubDevice */
+	private XPGWifiSubDevice selectSubDevice;
 
 	/** 是否超时标志位 */
 	private boolean isTimeOut = false;
@@ -307,17 +323,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
 //		ivBack = (ImageView) findViewById(R.id.ivBack);
 		sclContent = (ListView) findViewById(R.id.sclContent);
-
-		mPowerOffDialog = DialogManager.getPowerOffDialog(this,
-				new OnClickListener() {
-
-					@Override
-					public void onClick(View arg0) {
-						// mCenter.cSwitchOn(mXpgWifiDevice, false);
-						DialogManager.dismissDialog(MainListActivity.this,
-								mPowerOffDialog);
-					}
-				});
+		
+		btnSwitch = (Button) findViewById(R.id.btnSwitch);
+		lightness = (SeekBar) findViewById(R.id.sbLightness);
 
 		mAdapter = new MenuDeviceAdapter(this, bindlist);
 		lvDevice = (ListView) findViewById(R.id.lvDevice);
@@ -353,6 +361,42 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				loginDevice(mXpgWifiDevice);
 			}
 		});
+		lightness.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					lightness.getParent().requestDisallowInterceptTouchEvent(true);
+					break;
+				case MotionEvent.ACTION_CANCEL:
+					lightness.getParent().requestDisallowInterceptTouchEvent(false);
+					break;
+				}
+				return false;
+			}
+		});
+		lightness.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				mCenter.cLightness(selectSubDevice, seekBar.getProgress());
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				// TODO Auto-generated method stub
+			}
+		});
+		btnSwitch.setOnClickListener(this);
 	}
 
 	/**
@@ -390,6 +434,21 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				// intent.putExtra("alarm_list", alarmList);
 				// startActivity(intent);
 			}
+			break;
+		case R.id.btnSwitch:
+			mCenter.cSwitchOn(selectSubDevice, true);
+			break;
+		default:
+			if (selecttv != null) {
+				Drawable drawable=this.getResources().getDrawable(R.drawable.lampw_framew); 
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				selecttv.setCompoundDrawables(null,drawable,null,null);
+			}
+			Drawable drawable=this.getResources().getDrawable(R.drawable.lampw_frameg); 
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            ((TextView)v).setCompoundDrawables(null,drawable,null,null);
+            selecttv = ((TextView)v);
+            selectSubDevice = (XPGWifiSubDevice) v.getTag();
 			break;
 		}
 	}

@@ -336,6 +336,22 @@ public class CmdCenter {
 		}
 
 	}
+	
+	/**
+	 * 获取子设备状态.
+	 * 
+	 * @param xpgWifiSubDevice
+	 *            the xpg wifi sub device
+	 */
+	public void cGetSubStatus(XPGWifiSubDevice xpgWifiSubDevice){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("cmd", 2);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		xpgWifiSubDevice.write(json.toString());
+	}
 
 	/**
 	 * 获取设备状态.
@@ -544,18 +560,5 @@ public class CmdCenter {
 		cSubWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
 //		cSubGetStatus(xpgWifiDevice);
 	}
-
-//	/**
-//	 * C switch on.
-//	 * 
-//	 * @param xpgWifiDevice
-//	 *            the xpg wifi device
-//	 * @param isOn
-//	 *            the is on
-//	 */
-//	public void cSubWrite(XPGWifiDevice xpgWifiDevice, boolean isOn) {
-//		cWrite(xpgWifiDevice, JsonKeys.ON_OFF_ALL, isOn);
-//		cGetStatus(xpgWifiDevice);
-//	}
 
 }

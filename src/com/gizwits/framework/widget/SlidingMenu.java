@@ -3,6 +3,7 @@ package com.gizwits.framework.widget;
 import com.gizwits.framework.utils.DensityUtil;
 import com.nineoldandroids.view.ViewHelper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
