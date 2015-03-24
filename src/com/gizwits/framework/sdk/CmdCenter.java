@@ -529,6 +529,16 @@ public class CmdCenter {
 		xpgWifiGroup.removeDevice(xpgWifiSubDevice.getDid(),
 				xpgWifiSubDevice.getSubDid());
 	}
+	
+	/**
+	 * 从分组获取子设备
+	 * 
+	 * @param xpgWifiGroup
+	 *            组
+	 * */
+	public void cGetGroupDevices(XPGWifiGroup xpgWifiGroup){
+		xpgWifiGroup.getDevices();
+	}
 
 	// =================================================================
 	//
@@ -545,7 +555,6 @@ public class CmdCenter {
 	 */
 	public void cSwitchOn(XPGWifiSubDevice xpgWifiDevice, boolean isOn) {
 		cSubWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
-//		cSubGetStatus(xpgWifiDevice);
 	}
 
 	/**
@@ -558,7 +567,9 @@ public class CmdCenter {
 	 */
 	public void cLightness(XPGWifiSubDevice xpgWifiDevice, int lightness) {
 		cSubWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
-//		cSubGetStatus(xpgWifiDevice);
+
 	}
+
+
 
 }

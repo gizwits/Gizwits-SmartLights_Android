@@ -35,6 +35,8 @@ import com.gizwits.ledgateway.R;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDeviceListener;
+import com.xtremeprog.xpgconnect.XPGWifiGroup;
+import com.xtremeprog.xpgconnect.XPGWifiGroupListener;
 import com.xtremeprog.xpgconnect.XPGWifiSDKListener;
 import com.xtremeprog.xpgconnect.XPGWifiSSID;
 import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
@@ -58,6 +60,8 @@ public class BaseActivity extends Activity {
 	/** 绑定列表 */
 	protected static List<XPGWifiDevice> bindlist = new ArrayList<XPGWifiDevice>();
 
+	protected static List<XPGWifiGroup> grouplist = new ArrayList<XPGWifiGroup>();
+
 	/**
 	 * 指令管理器.
 	 */
@@ -78,6 +82,13 @@ public class BaseActivity extends Activity {
 		};
 	};
 
+	protected XPGWifiGroupListener xpgWifiGroupListener = new XPGWifiGroupListener() {
+		public void didGetDevices(int error,
+				List<ConcurrentHashMap<String, String>> devicesList) {
+			BaseActivity.this.didGetDevices(error, devicesList);
+		};
+	};
+
 	protected XPGWifiCentralControlDeviceListener xpgWifiCentralControlDeviceListener = new XPGWifiCentralControlDeviceListener() {
 		public void didDiscovered(int error,
 				List<XPGWifiSubDevice> subDeviceList) {
@@ -87,9 +98,11 @@ public class BaseActivity extends Activity {
 		public void didReceiveData(XPGWifiDevice device,
 				ConcurrentHashMap<String, Object> dataMap, int result) {
 
-			BaseActivity.this.didSubReceiveData(device, dataMap, result);
+			BaseActivity.this.didSubReceiveData((XPGWifiSubDevice) device,
+					dataMap, result);
 
 		};
+
 	};
 
 	/**
@@ -127,6 +140,10 @@ public class BaseActivity extends Activity {
 	 * sdk监听器。 配置设备上线、注册登录用户、搜索发现设备、用户绑定和解绑设备相关.
 	 */
 	private XPGWifiSDKListener sdkListener = new XPGWifiSDKListener() {
+
+		public void didGetGroups(int error, List<XPGWifiGroup> groupList) {
+			BaseActivity.this.didGetGroups(error, groupList);
+		};
 
 		@Override
 		public void didBindDevice(int error, String errorMessage, String did) {
@@ -202,6 +219,24 @@ public class BaseActivity extends Activity {
 		mCenter.getXPGWifiSDK().setListener(sdkListener);
 		// 把activity推入历史栈，退出app后清除历史栈，避免造成内存溢出
 		Historys.put(this);
+	}
+
+	/**
+	 * 分组获取子设备回调
+	 * 
+	 * @param error
+	 *            结果代码
+	 * @param devicesList
+	 *            子设备列表
+	 */
+	protected void didGetDevices(int error,
+			List<ConcurrentHashMap<String, String>> devicesList) {
+
+	}
+
+	protected void didGetGroups(int error, List<XPGWifiGroup> groupList2) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -396,7 +431,7 @@ public class BaseActivity extends Activity {
 	 * @param result
 	 *            状态代码
 	 */
-	protected void didSubReceiveData(XPGWifiDevice device,
+	protected void didSubReceiveData(XPGWifiSubDevice device,
 			ConcurrentHashMap<String, Object> dataMap, int result) {
 
 	}
@@ -466,6 +501,18 @@ public class BaseActivity extends Activity {
 		}
 
 		return xpgdevice;
+	}
+
+	public static XPGWifiGroup findGroupByGid(String gid) {
+		XPGWifiGroup xpgWifiGroup = null;
+		for (int i = 0; i < BaseActivity.grouplist.size(); i++) {
+			XPGWifiGroup wifiGroup = grouplist.get(i);
+			if (wifiGroup != null && wifiGroup.gid.equals(gid)) {
+				xpgWifiGroup = wifiGroup;
+				break;
+			}
+		}
+		return xpgWifiGroup;
 	}
 
 	public void onResume() {
