@@ -36,6 +36,7 @@ import com.xtremeprog.xpgconnect.XPGWifiCentralControlDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiGroup;
+import com.xtremeprog.xpgconnect.XPGWifiGroupListener;
 import com.xtremeprog.xpgconnect.XPGWifiSDKListener;
 import com.xtremeprog.xpgconnect.XPGWifiSSID;
 import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
@@ -81,17 +82,24 @@ public class BaseActivity extends Activity {
 		};
 	};
 
+	protected XPGWifiGroupListener xpgWifiGroupListener = new XPGWifiGroupListener() {
+		public void didGetDevices(int error,
+				List<ConcurrentHashMap<String, String>> devicesList) {
+			BaseActivity.this.didGetDevices(error, devicesList);
+		};
+	};
+
 	protected XPGWifiCentralControlDeviceListener xpgWifiCentralControlDeviceListener = new XPGWifiCentralControlDeviceListener() {
 		public void didDiscovered(int error,
 				List<XPGWifiSubDevice> subDeviceList) {
 			BaseActivity.this.didSubDiscovered(error, subDeviceList);
 		};
 
-	   
 		public void didReceiveData(XPGWifiDevice device,
 				ConcurrentHashMap<String, Object> dataMap, int result) {
 
-			BaseActivity.this.didSubReceiveData((XPGWifiSubDevice)device, dataMap, result);
+			BaseActivity.this.didSubReceiveData((XPGWifiSubDevice) device,
+					dataMap, result);
 
 		};
 
@@ -213,9 +221,22 @@ public class BaseActivity extends Activity {
 		Historys.put(this);
 	}
 
+	/**
+	 * 分组获取子设备毁掉
+	 * 
+	 * @param error
+	 *            结果代码
+	 * @param devicesList
+	 *            子设备列表
+	 */
+	protected void didGetDevices(int error,
+			List<ConcurrentHashMap<String, String>> devicesList) {
+
+	}
+
 	protected void didGetGroups(int error, List<XPGWifiGroup> groupList2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
