@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.gizwits.framework.entity.GroupDevice;
 import com.gizwits.ledgateway.R;
 import com.gizwits.ledgateway.activity.MainActivity;
 import com.gizwits.ledgateway.activity.MainListActivity;
@@ -25,17 +26,18 @@ import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
 @SuppressLint("ResourceAsColor")
 public class GroupAdapter extends BaseAdapter {   
 	private MainListActivity context;
-    private Map<String, List<XPGWifiSubDevice>> mapList;    //信息集合  
+    private Map<String, List<GroupDevice>> mapList;    //信息集合  
     private List<String> list;
     private LayoutInflater listContainer;           //视图容器   
     LinearLayout llview;
     public final class ListItemView{                //自定义控件集合     
-        public LinearLayout tv;         
+        public LinearLayout tv;        
+        public TextView groupNameTv;
 	}
     
     public static int height;
        
-    public GroupAdapter(MainListActivity context, Map<String, List<XPGWifiSubDevice>> mapList, List<String> list) { 
+    public GroupAdapter(MainListActivity context, Map<String, List<GroupDevice>> mapList, List<String> list) { 
     	this.list = list;
     	this.context=context;
         listContainer = LayoutInflater.from(context);   //创建视图容器并设置上下文   
@@ -70,9 +72,9 @@ public class GroupAdapter extends BaseAdapter {
         }
         listItemView.tv=(LinearLayout) convertView.findViewById(R.id.ll_item);
         listItemView.tv.removeAllViewsInLayout();
-    	Log.e("123", "123");
+        listItemView.groupNameTv = (TextView) convertView.findViewById(R.id.tv_name);
+        listItemView.groupNameTv.setText(list.get(position));
         for (int i = 0; i < mapList.get(list.get(position)).size(); i++) {
-        	Log.e("1234", ""+ mapList.get(list.get(position)).size());
         	if (!MainActivity.showString.equals(list.get(position)) && i == 4) {
 				break;
 			}
@@ -84,12 +86,10 @@ public class GroupAdapter extends BaseAdapter {
 			}
             TextView textview=new TextView(context);
             textview.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-            textview.setText("灯"+mapList.get(list.get(position)).get(i).getSubDid());
+            textview.setText("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid());
             textview.setGravity(Gravity.CENTER);
             textview.setTextColor(Color.parseColor("#FFFFFF")); 
-            Drawable drawable=context.getResources().getDrawable(R.drawable.lampw_framew); 
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            textview.setCompoundDrawables(null,drawable,null,null);
+            textview.setCompoundDrawables(null,context.wLight,null,null);
             textview.setOnClickListener(context);
             textview.setTag(mapList.get(list.get(position)).get(i));
             llview.addView(textview); 
@@ -100,9 +100,7 @@ public class GroupAdapter extends BaseAdapter {
 		            textviews.setText("123");
 		            textviews.setGravity(Gravity.CENTER);
 		            textviews.setVisibility(View.INVISIBLE);
-		            Drawable drawables=context.getResources().getDrawable(R.drawable.lampw_framew); 
-					drawables.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-		            textviews.setCompoundDrawables(null,drawables,null,null);
+		            textviews.setCompoundDrawables(null,context.wLight,null,null);
 		            llview.addView(textviews); 
 				};
 			}

@@ -58,7 +58,9 @@ import com.gizwits.framework.activity.device.DeviceManageListActivity;
 import com.gizwits.framework.activity.help.AboutActivity;
 import com.gizwits.framework.activity.help.HelpActivity;
 import com.gizwits.framework.adapter.MenuDeviceAdapter;
+import com.gizwits.framework.config.JsonKeys;
 import com.gizwits.framework.entity.DeviceAlarm;
+import com.gizwits.framework.entity.GroupDevice;
 import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.framework.widget.SlidingMenu;
 import com.gizwits.ledgateway.R;
@@ -141,9 +143,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	private XPGWifiCentralControlDevice centralControlDevice;
 	
 	/** the list device */
-	public Map<String, List<XPGWifiSubDevice>> mapList=new HashMap<String, List<XPGWifiSubDevice>>();
-	public List<XPGWifiSubDevice> ledList = new ArrayList<XPGWifiSubDevice>();
+	public Map<String, List<GroupDevice>> mapList=new HashMap<String, List<GroupDevice>>();
+	public List<GroupDevice> ledList = new ArrayList<GroupDevice>();
 	public List<String> list = new ArrayList<String>();
+	
+	/** the drawable pic white light */
+	public Drawable wLight;
+	/** the drawable pic yellow light */
+	public Drawable yLight;
+	/** the drawable pic white light select */
+	public Drawable wLightSelect;
+	/** the drawable pic yellow light select */
+	public Drawable yLightSelect;
 	
 	/** the groupadapter devicelist */
 	GroupAdapter mGroupAdapter;
@@ -287,7 +298,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 		mAdapter.notifyDataSetChanged();
 
-		Log.e("123", "123");
 		mCenter.cGetSubDevicesList(centralControlDevice);
 		
 //		handler.sendEmptyMessage(handler_key.GET_STATUE.ordinal());
@@ -297,6 +307,15 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 * Inits the params.
 	 */
 	private void initParams() {
+		wLight = this.getResources().getDrawable(R.drawable.lampw_framew); 
+		wLight.setBounds(0, 0, wLight.getMinimumWidth(), wLight.getMinimumHeight());
+		yLight = this.getResources().getDrawable(R.drawable.lampy_framey); 
+		yLight.setBounds(0, 0, yLight.getMinimumWidth(), yLight.getMinimumHeight());
+		wLightSelect = this.getResources().getDrawable(R.drawable.lampw_frameg); 
+		wLightSelect.setBounds(0, 0, wLightSelect.getMinimumWidth(), wLightSelect.getMinimumHeight());
+		yLightSelect = this.getResources().getDrawable(R.drawable.lampy_frameg); 
+		yLightSelect.setBounds(0, 0, yLightSelect.getMinimumWidth(), yLightSelect.getMinimumHeight());
+		
 		statuMap = new ConcurrentHashMap<String, Object>();
 		alarmList = new ArrayList<DeviceAlarm>();
 		alarmShowList = new ArrayList<String>();
@@ -440,15 +459,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			break;
 		default:
 			if (selecttv != null) {
-				Drawable drawable=this.getResources().getDrawable(R.drawable.lampw_framew); 
-				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-				selecttv.setCompoundDrawables(null,drawable,null,null);
+				selecttv.setCompoundDrawables(null,wLight,null,null);
 			}
-			Drawable drawable=this.getResources().getDrawable(R.drawable.lampw_frameg); 
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            ((TextView)v).setCompoundDrawables(null,drawable,null,null);
+            ((TextView)v).setCompoundDrawables(null,wLightSelect,null,null);
             selecttv = ((TextView)v);
-            selectSubDevice = (XPGWifiSubDevice) v.getTag();
+            selectSubDevice = ((GroupDevice) v.getTag()).getSubDevice();
+            llBottom.setVisibility(View.VISIBLE);
 			break;
 		}
 	}
@@ -555,9 +571,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			List<XPGWifiSubDevice> subDeviceList) {
 		// TODO Auto-generated method stub
 		super.didSubDiscovered(error, subDeviceList);
-		Log.e(TAG, ""+subDeviceList.size());
-		ledList = subDeviceList;
+		Log.e(TAG, "getSubDevices size : "+subDeviceList.size());
+		ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
 		mapList.put("我的LED", ledList);
+		for (int i = 0; i < subDeviceList.size(); i++) {
+			mCenter.cGetSubStatus(subDeviceList.get(i));
+		}
 		runOnUiThread(new Runnable() {
 			
 			@Override
@@ -566,6 +585,14 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				mGroupAdapter.notifyDataSetChanged();
 			}
 		});
+	}
+	
+	@Override
+	protected void didSubReceiveData(XPGWifiSubDevice device,
+			ConcurrentHashMap<String, Object> dataMap, int result) {
+		// TODO Auto-generated method stub
+		super.didSubReceiveData(device, dataMap, result);
+		Log.e(TAG, device.getSubDid()+": onOff " + dataMap.get(JsonKeys.ON_OFF) + " + lightness "+dataMap.get(JsonKeys.LIGHTNESS));
 	}
 
 	/*
