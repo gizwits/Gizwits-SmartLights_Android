@@ -3,6 +3,7 @@ package com.gizwits.ledgateway.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,10 +45,12 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 			handler_key key = handler_key.values()[msg.what];
 			switch (key) {
 			case START:
+				Log.e("add", "add "+centralControlDevice.getDid() +" "+centralControlDevice.getProductName());
 				mCenter.cAddSubDevice(centralControlDevice);
 				this.sendEmptyMessageDelayed(handler_key.START.ordinal(), 2000);
 				break;
 			case STOP:
+				this.removeMessages(handler_key.START.ordinal());
 				break;
 			default:
 				break;
@@ -60,6 +63,7 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_sub);
+		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
 		initViews();
 		initEvent();
 	}
@@ -88,7 +92,12 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 		finish();
 	}
 	
-
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		handler.sendEmptyMessage(handler_key.START.ordinal());
+		super.onResume();
+	}
 
 
 }

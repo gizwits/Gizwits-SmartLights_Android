@@ -37,7 +37,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:padding="10dp"
                     android:src="@drawable/icon_menu" />
 
                 <TextView
@@ -49,15 +48,14 @@
                     android:textColor="@android:color/white"
                     android:textSize="22sp" />
 
-                <!-- <ImageView
-                    android:id="@+id/ivPower"
+                <ImageView
+                    android:id="@+id/ivEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:padding="10dp"
-                    android:src="@drawable/icon_power" /> -->
+                    android:src="@drawable/icon_edit_w" />
 
                 <RelativeLayout
                     android:id="@+id/rlAlarmTips"
@@ -92,26 +90,90 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rlHeader" >
-
+                <ListView
+                    android:id="@+id/sclContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="18dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:layout_above="@+id/llFooter"
+                    android:layout_alignParentTop="true"
+					android:dividerHeight="10dp"
+					android:divider="@color/transparent"
+                    android:scrollbars="none" >
+                </ListView>
+                
+                <LinearLayout 
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent">
+	                <Button 
+	                    android:id="@+id/black_alpha_bg"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="match_parent"
+	                    android:background="@color/black"
+	                    android:visibility="gone"
+	                    android:alpha="0.7"/>
+                </LinearLayout>
+                
                 <LinearLayout
                     android:id="@+id/llFooter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:orientation="vertical" >
-
+					
                     <LinearLayout
                         android:id="@+id/llBottom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#dbf3fc"
+                        android:background="@drawable/tip_bottom_bg"
                         android:orientation="vertical"
-                        android:padding="18dp"
                         android:visibility="gone" >
-                        <Button
-				            android:id="@+id/btnSwitch"
-				            android:layout_width="wrap_content"
-				            android:layout_height="wrap_content" />
+                        <RelativeLayout 
+	                        android:layout_width="match_parent"
+	                        android:layout_height="wrap_content"
+	                        android:layout_marginLeft="18dp"
+	                        android:layout_marginTop="10dp"
+	                        android:gravity="center_vertical"
+	                        android:layout_marginRight="18dp">
+                            <TextView 
+                                android:id="@+id/show_led_name"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:text="XXX"
+		                        android:textColor="@color/text_gray_s"
+		                        android:textSize="24sp"/>
+                            
+                            <ImageView 
+                                android:id="@+id/edit_group"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_alignParentRight="true"
+		                        android:visibility="gone"
+		                        android:src="@drawable/icon_edit"/>
+                        </RelativeLayout>
+                        <View 
+	                        android:layout_width="match_parent"
+	                        android:layout_marginTop="10dp"
+	                        android:layout_height="1dp"
+	    					android:background="#DCDCDC"/>
+                        
+                        <TextView 
+                            android:id="@+id/btnSwitch"
+                            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:layout_margin="10dp"
+				            android:drawableTop="@drawable/icon_power"
+				            android:gravity="center"
+				            android:text="关灯"
+				            android:layout_gravity="center_horizontal"
+				            android:textColor="#51A4D4"/>
+                        
+                        <View 
+	                        android:layout_width="match_parent"
+	                        android:layout_height="1dp"
+	    					android:background="#DCDCDC"/>
 				
 				        <SeekBar
 				            android:id="@+id/sbLightness"
@@ -121,15 +183,6 @@
 				            android:max="255"/>
                     </LinearLayout>
                 </LinearLayout>
-                <ListView
-                    android:id="@+id/sclContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:layout_above="@+id/llFooter"
-                    android:layout_alignParentTop="true"
-                    android:scrollbars="none" >
-                </ListView>
             </RelativeLayout>
         </RelativeLayout>
 

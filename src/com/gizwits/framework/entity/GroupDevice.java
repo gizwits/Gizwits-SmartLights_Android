@@ -1,11 +1,12 @@
 package com.gizwits.framework.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
 
-public class GroupDevice {
+public class GroupDevice implements Serializable {
 	public GroupDevice(){
 		
 	}
@@ -16,8 +17,9 @@ public class GroupDevice {
 	}
 	
 	private XPGWifiSubDevice subDevice;
-	private boolean onOff;
-	private int lightness;
+	private boolean onOff = false;
+	private int lightness = 0;
+	private int sdid;
 	public XPGWifiSubDevice getSubDevice() {
 		return subDevice;
 	}
@@ -36,6 +38,13 @@ public class GroupDevice {
 	public void setLightness(int lightness) {
 		this.lightness = lightness;
 	}
+	public int getSdid() {
+		return sdid;
+	}
+	public void setSdid(int sdid) {
+		this.sdid = sdid;
+	}
+	
 	
 	public static List<GroupDevice> getGroupDeviceByList(List<XPGWifiSubDevice> subDevices){
 		List<GroupDevice> gDevices = new ArrayList<GroupDevice>();
@@ -45,5 +54,13 @@ public class GroupDevice {
 			gDevices.add(gDevice);
 		}
 		return gDevices;
+	}
+	
+	public static ArrayList<String> getAllName(List<GroupDevice> groupDevices){
+		ArrayList<String> sdids = new ArrayList<String>();
+		for (int i = 0; i < groupDevices.size(); i++) {
+			sdids.add(groupDevices.get(i).getSubDevice().getSubDid());
+		}
+		return sdids;
 	}
 }

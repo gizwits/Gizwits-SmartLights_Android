@@ -60,17 +60,17 @@ public class BaseActivity extends Activity {
 	/** 绑定列表 */
 	protected static List<XPGWifiDevice> bindlist = new ArrayList<XPGWifiDevice>();
 
-	protected static List<XPGWifiGroup> grouplist = new ArrayList<XPGWifiGroup>();
+	public static List<XPGWifiGroup> grouplist = new ArrayList<XPGWifiGroup>();
 
 	/**
 	 * 指令管理器.
 	 */
-	protected CmdCenter mCenter;
+	public CmdCenter mCenter;
 
 	/**
 	 * SharePreference处理类.
 	 */
-	protected SettingManager setmanager;
+	public SettingManager setmanager;
 
 	/** 当前操作的设备 */
 	protected static XPGWifiDevice mXpgWifiDevice;

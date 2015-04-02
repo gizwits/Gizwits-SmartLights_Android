@@ -17,10 +17,19 @@
  */
 package com.gizwits.framework.sdk;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.security.auth.callback.Callback;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.gizwits.framework.config.Configs;
@@ -471,6 +480,25 @@ public class CmdCenter {
 			XPGWifiSubDevice subDevice) {
 		centralControlDevice.deleteSubDevice(subDevice.getSubDid());
 	}
+	
+	/**
+	 * 添加分组
+	 * 
+	 * @param uid
+	 *            用户id
+	 * @param token
+	 *            授权令牌
+	 * @param productKey
+	 *            指定productkey
+	 * @param groupName
+	 *            分组名称
+	 * @param specilalDevices
+	 *            指定specilalDevices          
+	 * */
+	public void cAddGroup(String uid, String token,
+			String productKey,String groupName,List<ConcurrentHashMap<String, String>> specilalDevices) {
+		xpgWifiGCC.addGroup(uid, token, productKey, groupName, specilalDevices);
+	}
 
 	/**
 	 * 获取分组列表
@@ -511,9 +539,8 @@ public class CmdCenter {
 	 *            子设备
 	 * */
 	public void cAddToGroup(XPGWifiGroup xpgWifiGroup,
-			XPGWifiSubDevice xpgWifiSubDevice) {
-		xpgWifiGroup.addDevice(xpgWifiSubDevice.getDid(),
-				xpgWifiSubDevice.getSubDid());
+			String did, String subDid) {
+		xpgWifiGroup.addDevice(did, subDid);
 	}
 
 	/**
@@ -525,9 +552,9 @@ public class CmdCenter {
 	 *            子设备
 	 * */
 	public void cRemoveFromGroup(XPGWifiGroup xpgWifiGroup,
-			XPGWifiSubDevice xpgWifiSubDevice) {
-		xpgWifiGroup.removeDevice(xpgWifiSubDevice.getDid(),
-				xpgWifiSubDevice.getSubDid());
+			String did, String subDid) {
+		Log.e(""+did, "sub"+subDid);
+		xpgWifiGroup.removeDevice(did,subDid);
 	}
 	
 	/**
@@ -555,6 +582,9 @@ public class CmdCenter {
 	 */
 	public void cSwitchOn(XPGWifiSubDevice xpgWifiDevice, boolean isOn) {
 		cSubWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
+		Message msg = new Message();
+		msg.obj = xpgWifiDevice;
+		handler.sendMessageDelayed(msg, 1000);
 	}
 
 	/**
@@ -567,9 +597,15 @@ public class CmdCenter {
 	 */
 	public void cLightness(XPGWifiSubDevice xpgWifiDevice, int lightness) {
 		cSubWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
-
+		Message msg = new Message();
+		msg.obj = xpgWifiDevice;
+		handler.sendMessageDelayed(msg, 1000);
 	}
 
-
+	Handler handler = new Handler(){
+		public void handleMessage(Message msg) {
+			cSubGetStatus((XPGWifiSubDevice)msg.obj);
+		};
+	};
 
 }

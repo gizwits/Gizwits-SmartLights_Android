@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#38C0EB"
+    android:background="#3397CD"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -26,12 +26,39 @@
             android:text="智能灯"
             android:textColor="@android:color/white"
             android:textSize="22sp" />
+
+        <ImageView
+            android:id="@+id/ivConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_confirm" />
     </RelativeLayout>
 
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择智能灯"
+        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="18dp"
+        android:textColor="@color/white"/>
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="10dp"
+        android:background="@color/white"/>
+    
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -92,19 +119,55 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:background="#FD7223" >
+        android:background="@color/white"
+        android:orientation="vertical" >
+        <EditText 
+            android:id="@+id/et_group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input"
+            android:layout_marginTop="15dp"
+            android:hint="名称"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"
+            android:layout_gravity="center_horizontal"/>
+        
+        <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="成员："
+	        android:textSize="14sp"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginLeft="30dp"
+	        android:textColor="#707070"/>
+	    
+	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="0.5dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_marginRight="20dp"
+	        android:background="#E7E7E7"/>
+	    
+	    <ScrollView 
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="18dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_marginRight="20dp"
+	        android:scrollbars="none">
+	        <LinearLayout
+	            android:id="@+id/ll_select_led"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical" >
+	            
+	        </LinearLayout>
+	    </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

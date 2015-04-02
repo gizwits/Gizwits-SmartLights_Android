@@ -28,9 +28,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.gizwits.ledgateway.R;
 import com.gizwits.framework.widget.ArrayWheelAdapter;
 import com.gizwits.framework.widget.WheelView;
+import com.gizwits.ledgateway.R;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,6 +76,39 @@ public class DialogManager {
 		View v = layoutInflater.inflate(R.layout.dialog_logout, null);
 		Button leftBtn = (Button) v.findViewById(R.id.left_btn);
 		Button rightBtn = (Button) v.findViewById(R.id.right_btn);
+		leftBtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				dismissDialog(ctx, dialog);
+			}
+		});
+		rightBtn.setOnClickListener(r);
+
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.setCancelable(false);
+		dialog.setContentView(v);
+		return dialog;
+	}
+	
+	/**
+	 * 删除对话框.
+	 *
+	 * @param ctx the ctx
+	 * @param r            右按钮监听器
+	 * @param String       显示需要删除名字s
+	 * @return the logout dialog
+	 */
+	public static Dialog getDeleteDialog(final Activity ctx, OnClickListener r, String str) {
+		final Dialog dialog = new Dialog(ctx, R.style.noBackgroundDialog) {
+		};
+		LayoutInflater layoutInflater = LayoutInflater.from(ctx);
+		View v = layoutInflater.inflate(R.layout.dialog_led_delete, null);
+		Button leftBtn = (Button) v.findViewById(R.id.left_btn);
+		Button rightBtn = (Button) v.findViewById(R.id.right_btn);
+		TextView delTv = (TextView) v.findViewById(R.id.content);
+		delTv.setText(str);
 		leftBtn.setOnClickListener(new View.OnClickListener() {
 
 			@Override

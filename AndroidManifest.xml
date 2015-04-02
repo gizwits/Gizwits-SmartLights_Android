@@ -69,7 +69,8 @@
         <activity android:name="com.gizwits.centercontrolled.activity.slipbar.SlipBarActivity" />
         <activity
             android:name="com.gizwits.ledgateway.activity.MainListActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.gizwits.ledgateway.activity.AddSubDeviceActivity" />
         <activity android:name="com.gizwits.ledgateway.activity.EditGroupActivity" />
         <activity android:name="com.gizwits.ledgateway.activity.TestActivity" />

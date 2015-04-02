@@ -84,6 +84,9 @@ public enum GizwitsErrorMsg {
 
 	/** The E20. */
 	E20(9020, "username or password error!", "用户名或者密码错误");
+//	
+//	/** The E20. */
+//	E21(9020, "email unavailable!", "用户名或者密码错误");
 
 	/**  错误描述. */
 	private String EngDescript, CHNDescript;
