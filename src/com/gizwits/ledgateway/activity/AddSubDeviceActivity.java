@@ -47,10 +47,6 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 			case START:
 				Log.e("add", "add "+centralControlDevice.getDid() +" "+centralControlDevice.getProductName());
 				mCenter.cAddSubDevice(centralControlDevice);
-				this.sendEmptyMessageDelayed(handler_key.START.ordinal(), 2000);
-				break;
-			case STOP:
-				this.removeMessages(handler_key.START.ordinal());
 				break;
 			default:
 				break;

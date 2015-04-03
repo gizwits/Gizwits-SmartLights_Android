@@ -103,6 +103,9 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 
 	// 设置滑动layout中子项
 	private void setItemTollScroll() {
+		if (ledList.size() == 0) {
+			return;
+		}
 		ll_scroll.removeAllViewsInLayout();
         for (int i = 0; i < ledList.size(); i++) {
             TextView textview=new TextView(EditGroupActivity.this);

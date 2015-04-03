@@ -68,54 +68,13 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#FD7223" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#8DC254" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#FD7223" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#8DC254" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#FD7223" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#8DC254" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#FD7223" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#8DC254" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#FD7223" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#8DC254" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="灯0000"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:visibility="invisible"
+                android:drawableTop="@drawable/lampw_framew_b" />
         </LinearLayout>
     </HorizontalScrollView>
 

@@ -206,8 +206,10 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 				String macAddress=xpgWifiDevice.getMacAddress();
 				int size=macAddress.length();
 				etName.setText(xpgWifiDevice.getProductName() + macAddress.substring(size-4, size));
+				etName.setSelection(xpgWifiDevice.getProductName().length() + macAddress.substring(size-4, size).length());
 			}else{
 				etName.setText(xpgWifiDevice.getRemark());
+				etName.setSelection(xpgWifiDevice.getRemark().length());
 			}
 		}
 	}

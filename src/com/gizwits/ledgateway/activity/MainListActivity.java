@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -142,6 +144,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 
 	/** The lv device. */
 	private ListView lvDevice;
+	
+	private ProgressDialog getStatusProgress;
 
 	/** The device data map. */
 	private ConcurrentHashMap<String, Object> deviceDataMap;
@@ -279,6 +283,25 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 						ledList.get(i).setLightness(Integer.parseInt(statuMap.get(JsonKeys.LIGHTNESS).toString()));
 					}
 				}
+				boolean isOk = false;
+				if (selectGroup != "") {
+					for (int j = 0; j < groupMapList.get(selectGroup).size(); j++) {
+						for (int i = 0; i < ledList.size(); i++) {
+							if (ledList.get(i).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(j))) {
+								if(ledList.get(i).isOnOff()){
+									btnSwitch.setText("关灯");
+								}else {
+									btnSwitch.setText("开灯");
+								}
+								isOk = true;
+								break;
+							}
+						}
+						if (isOk) {
+							break;
+						}
+					}
+				}
 				if (ivDels.size() > 0) {
 					ivDels.clear();
 				}
@@ -348,6 +371,17 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mCenter.cGetSubDevicesList(centralControlDevice);
 		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 		
+		getStatusProgress.show();
+		final Timer timer=new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				getStatusProgress.cancel();
+				timer.cancel();
+			}
+		}, 3000);
 //		handler.sendEmptyMessage(handler_key.GET_STATUE.ordinal());
 	}
 
@@ -382,6 +416,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 
 		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
 		centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
+		
+		getStatusProgress = new ProgressDialog(this);
+		getStatusProgress.setMessage("获取灯状态...");
+		getStatusProgress.setCancelable(false);
 	}
 
 	/**

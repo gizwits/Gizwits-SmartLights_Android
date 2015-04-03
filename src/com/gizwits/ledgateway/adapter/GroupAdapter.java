@@ -22,6 +22,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.entity.GroupDevice;
 import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.ledgateway.R;
@@ -45,6 +46,7 @@ public class GroupAdapter extends BaseAdapter {
         public LinearLayout ll_item_bottom;
         public View v_line;
         public ImageView ivDel;
+        public LinearLayout item_bg;
 	}
     
     public static int height;
@@ -101,6 +103,7 @@ public class GroupAdapter extends BaseAdapter {
 			listItemView = new ListItemView();    
             convertView = listContainer.inflate(R.layout.item_device_list, null); 
 		}
+        listItemView.item_bg = (LinearLayout) convertView.findViewById(R.id.item_bg);
         listItemView.tv=(LinearLayout) convertView.findViewById(R.id.ll_item);
         listItemView.tv.removeAllViewsInLayout();
         listItemView.groupNameTv = (TextView) convertView.findViewById(R.id.tv_name);
@@ -110,6 +113,7 @@ public class GroupAdapter extends BaseAdapter {
         listItemView.ivDel = (ImageView) convertView.findViewById(R.id.ivDel);
         List<LinearLayout> llviews=new ArrayList<LinearLayout>();
         if (list.get(position).equals("我的LED")) {
+        	listItemView.item_bg.setBackgroundResource(R.drawable.kuang);
         	listItemView.v_line.setVisibility(View.GONE);
         	listItemView.groupNameTv.setVisibility(View.GONE);
         	if (mapList.get(list.get(position)).size() == 0) {
@@ -226,17 +230,9 @@ public class GroupAdapter extends BaseAdapter {
 					}
 				}
             	
-            	
-            	
             	if (isopenLight) {
-            		if (context.selectGroup != null && context.selectGroup.equals(list.get(position))) {
-            			context.btnSwitch.setText("关灯");
-    				}
 					textview.setCompoundDrawables(null,context.yLight,null,null);
 				}else{
-					if (context.selectGroup != null && context.selectGroup.equals(list.get(position))) {
-						context.btnSwitch.setText("开灯");
-					}
 					textview.setCompoundDrawables(null,context.wLight,null,null);
 				}
             }
@@ -378,9 +374,9 @@ public class GroupAdapter extends BaseAdapter {
 						if (group.groupName.equals(groupName)) {
 							context.mCenter.cDeleteGroups(context.setmanager.getUid(), 
 									context.setmanager.getToken(), group);
+							context.mCenter.cGetGroups(context.setmanager.getUid(), context.setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 						}
 					}
-					context.onResume();
 					DialogManager.dismissDialog(context, delDialog);
 				}
 			}, groupName);
@@ -400,7 +396,7 @@ public class GroupAdapter extends BaseAdapter {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					context.mCenter.cDeleteSubDevice(context.centralControlDevice, led);
-					context.onResume();
+					context.mCenter.cGetSubDevicesList(context.centralControlDevice);
 					DialogManager.dismissDialog(context, delDialog);
 				}
 			}, "灯"+led.getSubDid());
