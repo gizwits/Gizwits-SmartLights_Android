@@ -34,26 +34,26 @@ import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
   
 @SuppressLint("ResourceAsColor")
 public class GroupAdapter extends BaseAdapter {   
-	private MainListActivity context;
-    private Map<String, List<GroupDevice>> mapList;    //信息集合  
-    private List<String> list;
+	private MainListActivity mainListActivity;      //Activity         
+    private Map<String, List<GroupDevice>> mapList; //分组中子设备信息集合
+    private List<String> list;                      //list分组
     private LayoutInflater listContainer;           //视图容器   
-    LinearLayout llview;
-    private Dialog delDialog;
+    LinearLayout llview;                            //item项中
+    private Dialog delDialog;                       //删除弹窗
     public final class ListItemView{                //自定义控件集合     
-        public LinearLayout tv;        
-        public TextView groupNameTv;
-        public LinearLayout ll_item_bottom;
-        public View v_line;
-        public ImageView ivDel;
-        public LinearLayout item_bg;
+        public LinearLayout ll_item;//item中设置子灯LinearLayout
+        public TextView groupNameTv;//item名称
+        public LinearLayout ll_item_bottom;//item底部展开条
+        public View v_line;//item名称下直线
+        public ImageView ivDel;//item删除按钮
+        public LinearLayout item_bg;//item背景设置LinearLayout
 	}
     
     public static int height;
        
     public GroupAdapter(MainListActivity context, Map<String, List<GroupDevice>> mapList, List<String> list) { 
     	this.list = list;
-    	this.context=context;
+    	this.mainListActivity=context;
         listContainer = LayoutInflater.from(context);   //创建视图容器并设置上下文   
         this.mapList = mapList;
     }
@@ -71,10 +71,10 @@ public class GroupAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
     	// TODO Auto-generated method stub
-    	if (context.ivEdit.getTag().toString().equals("0")) {
+    	if (mainListActivity.ivEdit.getTag().toString().equals("0")) {//若开启编辑模式，不可点击item项
 			return false;
 		}
-    	if (position == 0 || position == 1 || position == 2) {
+    	if (position == 0 || position == 1 || position == 2) {//前三项item不可点击
 			return false;
 		}
     	return true;
@@ -87,7 +87,7 @@ public class GroupAdapter extends BaseAdapter {
         // TODO Auto-generated method stub  
     	//自定义视图   
         ListItemView  listItemView = null;   
-        if (list.get(position).equals("light") || list.get(position).equals("group")) {
+        if (list.get(position).equals("light") || list.get(position).equals("group")) {//如为light||group展示分组名（我的LED与我的分组）item
         	convertView = listContainer.inflate(R.layout.item_device_tag, null); 
         	TextView tv = (TextView) convertView.findViewById(R.id.tv_name);
         	if (list.get(position).equals("light")) {
@@ -96,53 +96,57 @@ public class GroupAdapter extends BaseAdapter {
 				tv.setText("我的分组");
 			}
         	return convertView;
-		}else if(list.get(position).equals("addGroup")){
+		}else if(list.get(position).equals("addGroup")){//如果addGroup展示添加分组item
 			convertView = listContainer.inflate(R.layout.item_device_add, null); 
 			return convertView;
 		}else{
 			listItemView = new ListItemView();    
             convertView = listContainer.inflate(R.layout.item_device_list, null); 
 		}
+        //**********************************item参数**********************************
         listItemView.item_bg = (LinearLayout) convertView.findViewById(R.id.item_bg);
-        listItemView.tv=(LinearLayout) convertView.findViewById(R.id.ll_item);
-        listItemView.tv.removeAllViewsInLayout();
+        listItemView.ll_item=(LinearLayout) convertView.findViewById(R.id.ll_item);
+        listItemView.ll_item.removeAllViewsInLayout();
         listItemView.groupNameTv = (TextView) convertView.findViewById(R.id.tv_name);
         listItemView.groupNameTv.setText(list.get(position));
         listItemView.ll_item_bottom = (LinearLayout) convertView.findViewById(R.id.ll_item_bottom);
         listItemView.v_line = convertView.findViewById(R.id.v_line);
         listItemView.ivDel = (ImageView) convertView.findViewById(R.id.ivDel);
-        List<LinearLayout> llviews=new ArrayList<LinearLayout>();
+        //****************************************************************************
+        List<LinearLayout> llviews=new ArrayList<LinearLayout>();//保存多于4个灯的llview，用于显示隐藏
+        
+        //
         if (list.get(position).equals("我的LED")) {
         	listItemView.item_bg.setBackgroundResource(R.drawable.kuang);
         	listItemView.v_line.setVisibility(View.GONE);
         	listItemView.groupNameTv.setVisibility(View.GONE);
         	if (mapList.get(list.get(position)).size() == 0) {
-        		TextView add=new TextView(context);
+        		TextView add=new TextView(mainListActivity);
 	            add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-	            add.setPadding(0, DensityUtils.dp2px(context, 10f), 0, 0);
+	            add.setPadding(0, DensityUtils.dp2px(mainListActivity, 10f), 0, 0);
 	            add.setText("Add");
 	            add.setGravity(Gravity.CENTER);
 	            add.setTextColor(Color.parseColor("#FFFFFF"));
-	            add.setCompoundDrawables(null,context.add,null,null);
+	            add.setCompoundDrawables(null,mainListActivity.add,null,null);
 	            add.setOnClickListener(addClick);
-        		llview=new LinearLayout(context);
+        		llview=new LinearLayout(mainListActivity);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        		llview.setPadding(0, 0, 0, DensityUtils.dp2px(context, 10f));
-        		listItemView.tv.addView(llview);
+        		llview.setPadding(0, 0, 0, DensityUtils.dp2px(mainListActivity, 10f));
+        		listItemView.ll_item.addView(llview);
         		llview.addView(add);
-        		add=new TextView(context);
+        		add=new TextView(mainListActivity);
                 add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,context.add,null,null);
+                add.setCompoundDrawables(null,mainListActivity.add,null,null);
                 add.setVisibility(View.INVISIBLE);
         		llview.addView(add);
-        		add=new TextView(context);
+        		add=new TextView(mainListActivity);
                 add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,context.add,null,null);
+                add.setCompoundDrawables(null,mainListActivity.add,null,null);
                 add.setVisibility(View.INVISIBLE);
         		llview.addView(add);
-        		add=new TextView(context);
+        		add=new TextView(mainListActivity);
                 add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,context.add,null,null);
+                add.setCompoundDrawables(null,mainListActivity.add,null,null);
                 add.setVisibility(View.INVISIBLE);
         		llview.addView(add);
 			}
@@ -151,27 +155,27 @@ public class GroupAdapter extends BaseAdapter {
 	        convertView.setOnClickListener(groupCtrl);
 			listItemView.ivDel.setTag(list.get(position));
 			listItemView.ivDel.setOnClickListener(deleteGroupClick);
-			if (context.ivEdit.getTag().toString().equals("0")) {
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
 				listItemView.ivDel.setVisibility(View.VISIBLE);
 			}
-			context.ivDels.add(listItemView.ivDel);
+			mainListActivity.ivDels.add(listItemView.ivDel);
 		}
         for (int i = 0; i < mapList.get(list.get(position)).size(); i++) {
         	if (i % 4 == 0) {
-        		llview=new LinearLayout(context);
+        		llview=new LinearLayout(mainListActivity);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        		llview.setPadding(0, 0, 0, DensityUtils.dp2px(context, 10f));
-        		if (i >= 4 && !context.showSelectDevices.contains(list.get(position))) {
+        		llview.setPadding(0, 0, 0, DensityUtils.dp2px(mainListActivity, 10f));
+        		if (i >= 4 && !mainListActivity.showSelectDevices.contains(list.get(position))) {
         			llview.setVisibility(View.GONE);
         			llviews.add(llview);
 				}
-        		listItemView.tv.addView(llview);
+        		listItemView.ll_item.addView(llview);
 			}
-        	FrameLayout flayout=new FrameLayout(context);
+        	FrameLayout flayout=new FrameLayout(mainListActivity);
         	flayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-            TextView textview=new TextView(context);
+            TextView textview=new TextView(mainListActivity);
             android.widget.FrameLayout.LayoutParams params=new android.widget.FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, DensityUtils.dp2px(context, 7f), 0, 0);
+            params.setMargins(0, DensityUtils.dp2px(mainListActivity, 7f), 0, 0);
             params.gravity = Gravity.CENTER;
             textview.setLayoutParams(params);
             if (list.get(position).equals("我的LED")) {
@@ -183,40 +187,39 @@ public class GroupAdapter extends BaseAdapter {
             textview.setTextColor(Color.parseColor("#FFFFFF")); 
             if (list.get(position).equals("我的LED")) {
 	            if (mapList.get(list.get(position)).get(i).isOnOff()) {
-	            	if (context.selecttv != null) {
-						if (context.selecttv.getText().equals(textview.getText())) {
-							textview.setCompoundDrawables(null,context.yLightSelect,null,null);
-							context.btnSwitch.setText("关灯");
-							context.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
-							context.selecttv=textview;
+	            	if (mainListActivity.selecttv != null) {
+						if (mainListActivity.selecttv.getText().equals(textview.getText())) {
+							textview.setCompoundDrawables(null,mainListActivity.yLightSelect,null,null);
+							mainListActivity.btnSwitch.setText("关灯");
+							mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
+							mainListActivity.selecttv=textview;
 						}else{
-			            	textview.setCompoundDrawables(null,context.yLight,null,null);
+			            	textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
 						}
 					}else{
-		            	textview.setCompoundDrawables(null,context.yLight,null,null);
+		            	textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
 					}
 				}else{
-					if (context.selecttv != null) {
-						if (context.selecttv.getText().equals(textview.getText())) {
-				            textview.setCompoundDrawables(null,context.wLightSelect,null,null);
-							context.btnSwitch.setText("开灯");
-							context.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
-							context.selecttv=textview;
+					if (mainListActivity.selecttv != null) {
+						if (mainListActivity.selecttv.getText().equals(textview.getText())) {
+				            textview.setCompoundDrawables(null,mainListActivity.wLightSelect,null,null);
+				            mainListActivity.btnSwitch.setText("开灯");
+				            mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
+				            mainListActivity.selecttv=textview;
 						}else{
-				            textview.setCompoundDrawables(null,context.wLight,null,null);
+				            textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
 						}
 					}else{
-			            textview.setCompoundDrawables(null,context.wLight,null,null);
+			            textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
 					}
 				}
             }else{
             	boolean isopenLight = false ;
             	boolean isIntoCheck = false;
             	for (int j = 0; j < mapList.get(list.get(position)).size(); j++) {
-					for (int j2 = 0; j2 < context.ledList.size(); j2++) {
-						if (context.ledList.get(j2).getSubDevice().getSubDid().equals(""+mapList.get(list.get(position)).get(j).getSdid())) {
-							Log.e("context.ledList", ""+ mapList.get(list.get(position)).get(j).getSdid() + "  "+context.ledList.get(j2).getSubDevice().getSubDid());
-							if (context.ledList.get(j2).isOnOff()) {
+					for (int j2 = 0; j2 < mainListActivity.ledList.size(); j2++) {
+						if (mainListActivity.ledList.get(j2).getSubDevice().getSubDid().equals(""+mapList.get(list.get(position)).get(j).getSdid())) {
+							if (mainListActivity.ledList.get(j2).isOnOff()) {
 								isopenLight = true;
 							}else{
 								isopenLight = false;
@@ -231,9 +234,9 @@ public class GroupAdapter extends BaseAdapter {
 				}
             	
             	if (isopenLight) {
-					textview.setCompoundDrawables(null,context.yLight,null,null);
+					textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
 				}else{
-					textview.setCompoundDrawables(null,context.wLight,null,null);
+					textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
 				}
             }
             if (list.get(position).equals("我的LED")) {
@@ -242,8 +245,8 @@ public class GroupAdapter extends BaseAdapter {
             textview.setTag(mapList.get(list.get(position)).get(i));
             flayout.addView(textview);
             if (list.get(position).equals("我的LED")) {
-                ImageView ivX=new ImageView(context);
-                if (context.ivEdit.getTag().toString().equals("0")) {
+                ImageView ivX=new ImageView(mainListActivity);
+                if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
         			ivX.setVisibility(View.VISIBLE);
     			}else{
     				ivX.setVisibility(View.INVISIBLE);
@@ -254,43 +257,43 @@ public class GroupAdapter extends BaseAdapter {
                 param.gravity = Gravity.RIGHT;
                 ivX.setLayoutParams(param);
                 ivX.setOnClickListener(deleteLedClick);
-    			context.ivDels.add(ivX);
+                mainListActivity.ivDels.add(ivX);
             	flayout.addView(ivX);
             }
             llview.addView(flayout); 
             if (list.get(position).equals("我的LED")) {
-        		TextView add=new TextView(context);
+        		TextView add=new TextView(mainListActivity);
                 add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
                 add.setText("Add");
                 add.setGravity(Gravity.CENTER);
                 add.setTextColor(Color.parseColor("#FFFFFF"));
-                add.setCompoundDrawables(null,context.add,null,null);
+                add.setCompoundDrawables(null,mainListActivity.add,null,null);
                 add.setOnClickListener(addClick);
             	if (mapList.get(list.get(position)).size() % 4 != 0 && (i+1) == mapList.get(list.get(position)).size()) {
-                    add.setPadding(0, DensityUtils.dp2px(context, 10f), 0, 0);
+                    add.setPadding(0, DensityUtils.dp2px(mainListActivity, 10f), 0, 0);
             		llview.addView(add);
     			}else if(mapList.get(list.get(position)).size() % 4 == 0 && (i+1) == mapList.get(list.get(position)).size()){
-    				llview=new LinearLayout(context);
+    				llview=new LinearLayout(mainListActivity);
             		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             		llview.setPadding(0, 10, 0, 10);
-            		if (!context.showSelectDevices.contains("我的LED")) {
+            		if (!mainListActivity.showSelectDevices.contains("我的LED")) {
                 		llview.setVisibility(View.GONE);
 					}
-            		listItemView.tv.addView(llview);
+            		listItemView.ll_item.addView(llview);
             		llview.addView(add);
-            		add=new TextView(context);
+            		add=new TextView(mainListActivity);
                     add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,context.add,null,null);
+                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
                     add.setVisibility(View.INVISIBLE);
             		llview.addView(add);
-            		add=new TextView(context);
+            		add=new TextView(mainListActivity);
                     add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,context.add,null,null);
+                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
                     add.setVisibility(View.INVISIBLE);
             		llview.addView(add);
-            		add=new TextView(context);
+            		add=new TextView(mainListActivity);
                     add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,context.add,null,null);
+                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
                     add.setVisibility(View.INVISIBLE);
             		llview.addView(add);
             		llviews.add(llview);
@@ -299,29 +302,29 @@ public class GroupAdapter extends BaseAdapter {
             if (mapList.get(list.get(position)).size() % 4 > 0 && i == mapList.get(list.get(position)).size() - 1) {
             	if (list.get(position).equals("我的LED")) {
                 	for (int j = 0; j <= (4 - (mapList.get(list.get(position)).size() % 4) - 2); j++) {
-    					TextView textviews=new TextView(context);
+    					TextView textviews=new TextView(mainListActivity);
     		            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
     		            textviews.setText("null");
     		            textviews.setGravity(Gravity.CENTER);
     		            textviews.setVisibility(View.INVISIBLE);
-    		            textviews.setCompoundDrawables(null,context.wLight,null,null);
+    		            textviews.setCompoundDrawables(null,mainListActivity.wLight,null,null);
     		            llview.addView(textviews); 
     				};
 				}else{
 	            	for (int j = 0; j <= (4 - (mapList.get(list.get(position)).size() % 4) - 1); j++) {
-						TextView textviews=new TextView(context);
+						TextView textviews=new TextView(mainListActivity);
 			            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
 			            textviews.setText("null");
 			            textviews.setGravity(Gravity.CENTER);
 			            textviews.setVisibility(View.INVISIBLE);
-			            textviews.setCompoundDrawables(null,context.wLight,null,null);
+			            textviews.setCompoundDrawables(null,mainListActivity.wLight,null,null);
 			            llview.addView(textviews); 
 					};
 				}
 			}
 		}       
         listItemView.ll_item_bottom.setTag(llviews);
-        listItemView.ll_item_bottom.setOnClickListener(nameClick);
+        listItemView.ll_item_bottom.setOnClickListener(showItemClick);
         return convertView;     
     }
 
@@ -331,7 +334,10 @@ public class GroupAdapter extends BaseAdapter {
 		return mapList.size();
 	} 
 	
-	OnClickListener nameClick=new OnClickListener() {
+	/**
+	 * 展开item项
+	 */
+	OnClickListener showItemClick=new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -343,13 +349,13 @@ public class GroupAdapter extends BaseAdapter {
 			}
 			FrameLayout ll = (FrameLayout) v.getParent();
 			if (llviews.get(0).getVisibility() == View.GONE) {
-				context.showSelectDevices.add(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
+				mainListActivity.showSelectDevices.add(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
 				for (LinearLayout linearLayout : llviews) {
 					linearLayout.setVisibility(View.VISIBLE);
 				}
 				iv_bottom.setImageResource(R.drawable.icon_close);
 			}else{
-				context.showSelectDevices.remove(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
+				mainListActivity.showSelectDevices.remove(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
 				for (LinearLayout linearLayout : llviews) {
 					linearLayout.setVisibility(View.GONE);
 				}
@@ -358,81 +364,92 @@ public class GroupAdapter extends BaseAdapter {
 		}
 	};
 	
+	/**
+	 * 删除分组点击事件
+	 */
 	OnClickListener deleteGroupClick=new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			final String groupName = v.getTag().toString();
-	        delDialog = DialogManager.getDeleteDialog(context, new OnClickListener() {
+	        delDialog = DialogManager.getDeleteDialog(mainListActivity, new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					for (int i = 0; i < context.grouplist.size(); i++) {
-						XPGWifiGroup group = context.grouplist.get(i);
+					for (int i = 0; i < mainListActivity.grouplist.size(); i++) {
+						XPGWifiGroup group = mainListActivity.grouplist.get(i);
 						if (group.groupName.equals(groupName)) {
-							context.mCenter.cDeleteGroups(context.setmanager.getUid(), 
-									context.setmanager.getToken(), group);
-							context.mCenter.cGetGroups(context.setmanager.getUid(), context.setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
+							mainListActivity.mCenter.cDeleteGroups(mainListActivity.setmanager.getUid(), 
+									mainListActivity.setmanager.getToken(), group);
+							mainListActivity.mCenter.cGetGroups(mainListActivity.setmanager.getUid(), mainListActivity.setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 						}
 					}
-					DialogManager.dismissDialog(context, delDialog);
+					DialogManager.dismissDialog(mainListActivity, delDialog);
 				}
 			}, groupName);
-	        DialogManager.showDialog(context, delDialog);
+	        DialogManager.showDialog(mainListActivity, delDialog);
 		}
 	};
 	
+	/**
+	 * 删除led灯点击事件
+	 */
 	OnClickListener deleteLedClick=new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			final XPGWifiSubDevice led = (XPGWifiSubDevice) v.getTag();
-	        delDialog = DialogManager.getDeleteDialog(context,new OnClickListener() {
+	        delDialog = DialogManager.getDeleteDialog(mainListActivity,new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					context.mCenter.cDeleteSubDevice(context.centralControlDevice, led);
-					context.mCenter.cGetSubDevicesList(context.centralControlDevice);
-					DialogManager.dismissDialog(context, delDialog);
+					mainListActivity.mCenter.cDeleteSubDevice(mainListActivity.centralControlDevice, led);
+					mainListActivity.mCenter.cGetSubDevicesList(mainListActivity.centralControlDevice);
+					DialogManager.dismissDialog(mainListActivity, delDialog);
 				}
 			}, "灯"+led.getSubDid());
-	        DialogManager.showDialog(context, delDialog);
+	        DialogManager.showDialog(mainListActivity, delDialog);
 		}
 	};
 	
+	/**
+	 * 单灯控制弹出点击事件
+	 */
 	OnClickListener ledCtrl=new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Log.e("clicknormal", "click");
-			if (context.ivEdit.getTag().toString().equals("0")) {
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
 				return;
 			}
 			
 			GroupDevice gSelectDevice = (GroupDevice) v.getTag();
 			if (gSelectDevice.isOnOff()) {
-				((TextView)v).setCompoundDrawables(null,context.yLightSelect,null,null);
+				((TextView)v).setCompoundDrawables(null,mainListActivity.yLightSelect,null,null);
 			}else{
-	            ((TextView)v).setCompoundDrawables(null,context.wLightSelect,null,null);
+	            ((TextView)v).setCompoundDrawables(null,mainListActivity.wLightSelect,null,null);
 			}
-			context.selecttv = ((TextView)v);
-			context.selectSubDevice = gSelectDevice.getSubDevice();
+			mainListActivity.selecttv = ((TextView)v);
+			mainListActivity.selectSubDevice = gSelectDevice.getSubDevice();
             if (gSelectDevice.isOnOff()) {
-            	context.btnSwitch.setText("关灯");
+            	mainListActivity.btnSwitch.setText("关灯");
 			}else{
-				context.btnSwitch.setText("开灯");
+				mainListActivity.btnSwitch.setText("开灯");
 			}
-            context.light_name.setText(context.selecttv.getText().toString());
-            context.lightness.setProgress(gSelectDevice.getLightness());
-            context.bottomShow();
+            mainListActivity.light_name.setText(mainListActivity.selecttv.getText().toString());
+            mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
+            mainListActivity.bottomShow();
 		}
 	};
 	
+	/**
+	 * 分组控制底部菜单弹出点击事件
+	 */
 	OnClickListener groupCtrl=new OnClickListener() {
 		
 		@Override
@@ -441,25 +458,26 @@ public class GroupAdapter extends BaseAdapter {
 			String groupName = v.getTag().toString();
 			boolean isShowOk = false;
 			
-			if (context.ivEdit.getTag().toString().equals("0")) {
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
 				return;
 			}
 			
-			for (int j = 0; j < context.groupMapList.get(groupName).size(); j++) {
-				for (int i = 0; i < context.ledList.size() ; i++) {
-					if (context.groupMapList.get(groupName).get(j).equals(context.ledList.get(i).getSubDevice().getSubDid())) {
-						GroupDevice gSelectDevice = (GroupDevice) context.ledList.get(i);
-						context.selectSubDevice = gSelectDevice.getSubDevice();
-						context.selectGroup = groupName;
+			for (int j = 0; j < mainListActivity.groupMapList.get(groupName).size(); j++) {
+				for (int i = 0; i < mainListActivity.ledList.size() ; i++) {
+					if (mainListActivity.groupMapList.get(groupName).get(j).equals(mainListActivity.ledList.get(i).getSubDevice().getSubDid())) {
+						GroupDevice gSelectDevice = (GroupDevice) mainListActivity.ledList.get(i);
+						mainListActivity.selectSubDevice = gSelectDevice.getSubDevice();
+						mainListActivity.mCenter.cGetSubStatus(mainListActivity.selectSubDevice);
+						mainListActivity.selectGroup = groupName;
 			            if (gSelectDevice.isOnOff()) {
-			            	context.btnSwitch.setText("关灯");
+			            	mainListActivity.btnSwitch.setText("关灯");
 						}else{
-							context.btnSwitch.setText("开灯");
+							mainListActivity.btnSwitch.setText("开灯");
 						}
-			            context.light_name.setText(groupName);
-			            context.edit_group.setVisibility(View.VISIBLE);
-			            context.edit_group.setTag(groupName);
-			            context.lightness.setProgress(gSelectDevice.getLightness());
+			            mainListActivity.light_name.setText(groupName);
+			            mainListActivity.edit_group.setVisibility(View.VISIBLE);
+			            mainListActivity.edit_group.setTag(groupName);
+			            mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
 						isShowOk = true;
 						break;
 					}
@@ -469,20 +487,27 @@ public class GroupAdapter extends BaseAdapter {
 				}
 			}
 			if (isShowOk) {
-	            context.bottomShow();
+				mainListActivity.bottomShow();
 			}else{
-				Toast.makeText(context, "该组中无可用LED灯", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mainListActivity, "该组中无可用LED灯", Toast.LENGTH_SHORT).show();
 			}
 		}
 	};
 	
+	/**
+	 * 添加按钮点击事件
+	 */
 	OnClickListener addClick=new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent intent = new Intent(context, AddSubDeviceActivity.class);
-			context.startActivity(intent);
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
+				return;
+			}
+			
+			Intent intent = new Intent(mainListActivity, AddSubDeviceActivity.class);
+			mainListActivity.startActivity(intent);
 		}
 	};
 }  

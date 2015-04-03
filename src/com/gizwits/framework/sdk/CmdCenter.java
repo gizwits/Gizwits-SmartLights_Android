@@ -600,9 +600,6 @@ public class CmdCenter {
 	 */
 	public void cSwitchOn(XPGWifiSubDevice xpgWifiDevice, boolean isOn) {
 		cSubWrite(xpgWifiDevice, JsonKeys.ON_OFF, isOn);
-		Message msg = new Message();
-		msg.obj = xpgWifiDevice;
-		handler.sendMessageDelayed(msg, 1000);
 	}
 
 	/**
@@ -615,15 +612,6 @@ public class CmdCenter {
 	 */
 	public void cLightness(XPGWifiSubDevice xpgWifiDevice, int lightness) {
 		cSubWrite(xpgWifiDevice, JsonKeys.LIGHTNESS, lightness);
-		Message msg = new Message();
-		msg.obj = xpgWifiDevice;
-		handler.sendMessageDelayed(msg, 1000);
 	}
-
-	Handler handler = new Handler(){
-		public void handleMessage(Message msg) {
-			cSubGetStatus((XPGWifiSubDevice)msg.obj);
-		};
-	};
 
 }

@@ -155,10 +155,10 @@ public class SlidingMenu extends HorizontalScrollView {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		if (isOpen && ev.getX() > mMenuWidth) {
-			toggle();
-		}
-		return super.onInterceptTouchEvent(ev);
+//		if (isOpen && ev.getX() > mMenuWidth) {
+//			toggle();
+//		}
+		return false;
 	}
 
 	@Override

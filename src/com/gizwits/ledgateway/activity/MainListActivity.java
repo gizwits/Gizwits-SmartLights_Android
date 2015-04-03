@@ -273,6 +273,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				}
 			case UPDATE_UI:
 				for (int i = 0; i < ledList.size(); i++) {
+					if (ledList.get(i) == null) {
+						return;
+					}
 					if (ledList.get(i).getSubDevice().getSubDid().equals(subDevice.getSubDid())) {
 						ledList.get(i).setOnOff((Boolean) statuMap.get(JsonKeys.ON_OFF));
 						ledList.get(i).setLightness(Integer.parseInt(statuMap.get(JsonKeys.LIGHTNESS).toString()));
@@ -510,6 +513,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				}else {
 					mCenter.cLightness(selectSubDevice, seekBar.getProgress());
 				}
+				getLedStatus();
 			}
 			
 			@Override
@@ -523,21 +527,15 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 			}
 		});
-		alpha_bg.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				bottomClose();
-			}
-		});
+		alpha_bg.setOnClickListener(this);
 		ivEdit.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Log.e("showDel", ""+ivDels.size());
-
+				bottomClose();
+				
 				if (ivEdit.getTag().toString().equals("1")) {
 					ivEdit.setImageResource(R.drawable.icon_confirm);
 					ivEdit.setTag(0);
@@ -581,9 +579,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				// TODO Auto-generated method stub
-				mCenter.cGetSubDevicesList(centralControlDevice);
-				mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
-				
+				getLedStatus();
 				final Timer timer=new Timer();
 				timer.schedule(new TimerTask() {
 					
@@ -670,6 +666,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					mCenter.cSwitchOn(selectSubDevice, true);
 				}
 			}
+			getLedStatus();
 			break;
 		case R.id.edit_group:
 			Intent intent = new Intent(MainListActivity.this, EditGroupActivity.class);
@@ -679,14 +676,23 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			intent.putExtra("did", ""+centralControlDevice.getDid());
 			startActivity(intent);
 			break;
+		case R.id.black_alpha_bg:
+			bottomClose();
+			break;
 		}
 	}
 	
+	/**
+	 * 展开底部控制栏
+	 */
 	public void bottomShow(){
         llBottom.setVisibility(View.VISIBLE);
         alpha_bg.setVisibility(View.VISIBLE);
 	}
 	
+	/**
+	 * 关闭底部控制栏
+	 */
 	private void bottomClose(){
         llBottom.setVisibility(View.GONE);
         alpha_bg.setVisibility(View.GONE);
@@ -702,6 +708,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
         selecttv = null;
 	}
 
+	/**
+	 * 左侧菜单栏点击时间
+	 * @param view 点击item项
+	 */
 	public void onClickSlipBar(View view) {
 		switch (view.getId()) {
 		case R.id.rlDevice:
@@ -765,6 +775,28 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 
 	}
+	
+	public void getLedStatus(){
+		for (int i = 0; i < ledList.size(); i++) {
+			Message msg=new Message();
+			msg.what = handler_key.DEVICE_GETSTATUS.ordinal();
+			msg.obj = ledList.get(i).getSubDevice();
+			handler.sendMessageDelayed(msg, 600 * (i+1));
+		}
+	}
+	
+	public boolean checkDeviceExit(List<XPGWifiSubDevice> devices){
+		if (ledList.size() != devices.size()) {
+			return false;
+		}
+		boolean checkOk = true;
+		for (int i = 0; i < ledList.size(); i++) {
+			if (!devices.contains(ledList.get(i).getSubDevice())) {
+				checkOk = false;
+			}
+		}
+		return checkOk;
+	}
 
 	/**
 	 * 检查出了选中device，其他device有没有连接上
@@ -814,7 +846,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mapList.put("light", ledList);
 		list.add("light");
 		
-		ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
+		if (!checkDeviceExit(subDeviceList)) {
+			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
+		}
 		mapList.put("我的LED", ledList);
 		list.add("我的LED");
 		
@@ -847,11 +881,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		});
 		for (int i = 0; i < subDeviceList.size(); i++) {
 			subDeviceList.get(i).setListener(deviceListener);
-			Message msg=new Message();
-			msg.what = handler_key.DEVICE_GETSTATUS.ordinal();
-			msg.obj = subDeviceList.get(i);
-			handler.sendMessageDelayed(msg, 500 * (i+1));
 		}
+		getLedStatus();
 	}
 	
 	@Override
@@ -938,6 +969,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	@Override
 	public void onBackPressed() {
+		if (llBottom.getVisibility() == View.VISIBLE) {
+			bottomClose();
+			return;
+		}
 		if (mView.isOpen()) {
 			mView.toggle();
 		} else {

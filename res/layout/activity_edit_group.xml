@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#3397CD"
@@ -39,6 +39,8 @@
     </RelativeLayout>
 
     <TextView 
+        android:layout_below="@id/rlTop"
+        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="选择智能灯"
@@ -48,17 +50,21 @@
         android:textColor="@color/white"/>
     
     <View 
+        android:layout_below="@id/tv"
+        android:id="@+id/v_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="10dp"
         android:background="@color/white"/>
     
     <HorizontalScrollView
+        android:id="@+id/hsv_led"
+        android:layout_below="@id/v_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -77,8 +83,18 @@
                 android:drawableTop="@drawable/lampw_framew_b" />
         </LinearLayout>
     </HorizontalScrollView>
+    
+    
+    <ImageView 
+        android:layout_alignRight="@id/hsv_led"
+        android:layout_marginTop="128dp"
+        android:layout_marginRight="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_right_w"/>
 
     <LinearLayout
+        android:layout_below="@id/hsv_led"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -129,4 +145,4 @@
 	    </ScrollView>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
