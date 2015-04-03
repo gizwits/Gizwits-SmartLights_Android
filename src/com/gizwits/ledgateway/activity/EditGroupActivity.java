@@ -81,7 +81,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 			et_group_name.setText(groupName);
-			et_group_name.setEnabled(false);
+			et_group_name.setSelection(groupName.length());
 			selectLedList.addAll(exitLedList);
 			setItemToSelectScroll();
 		}
@@ -189,8 +189,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 			if (groupIsExit) {
-				addSubDeviceToGroup();
-				removeSubDeviceFromGroup();
+				editGroupName();
 			}else{
 				for (int i = 0; i < grouplist.size(); i++) {
 					if (grouplist.get(i).groupName.equals(et_group_name.getText().toString())) {
@@ -208,34 +207,45 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private void addSubDeviceToGroup() {
+//	private void addSubDeviceToGroup() {
+//		for (int i = 0; i < selectLedList.size(); i++) {
+//			boolean isOk = false;
+//			for (int j = 0; j < exitLedList.size(); j++) {
+//				if (exitLedList.get(j).equals(selectLedList.get(i))) {
+//					isOk = true;
+//				}
+//				if (!isOk && exitLedList.size()-1 == j) {
+//					Log.e("exit add", ""+selectLedList.get(i));
+//					mCenter.cAddToGroup(mXpgWifiGroup, did, selectLedList.get(i));
+//				}
+//			}
+//		}
+//	}
+//
+//	private void removeSubDeviceFromGroup() {
+//		for (int j = 0; j < exitLedList.size(); j++) {
+//			boolean isOk = false;
+//			for (int i = 0; i < selectLedList.size(); i++) {
+//				if (exitLedList.get(j).equals(selectLedList.get(i))) {
+//					isOk = true;
+//				}
+//				if (!isOk && selectLedList.size() - 1 == i) {
+//					Log.e("exit Del", ""+exitLedList.get(j));
+//					mCenter.cRemoveFromGroup(mXpgWifiGroup, did, exitLedList.get(j));
+//				}
+//			}
+//		}
+//	}
+	
+	private void editGroupName(){
+		List<ConcurrentHashMap<String, String>> groupMaps = new ArrayList<ConcurrentHashMap<String,String>>();
 		for (int i = 0; i < selectLedList.size(); i++) {
-			boolean isOk = false;
-			for (int j = 0; j < exitLedList.size(); j++) {
-				if (exitLedList.get(j).equals(selectLedList.get(i))) {
-					isOk = true;
-				}
-				if (!isOk && exitLedList.size()-1 == j) {
-					Log.e("exit add", ""+selectLedList.get(i));
-					mCenter.cAddToGroup(mXpgWifiGroup, did, selectLedList.get(i));
-				}
-			}
+			ConcurrentHashMap<String, String> groupMap = new ConcurrentHashMap<String, String>();
+			groupMap.put("did", did);
+			groupMap.put("sdid", selectLedList.get(i));
+			groupMaps.add(groupMap);
 		}
-	}
-
-	private void removeSubDeviceFromGroup() {
-		for (int j = 0; j < exitLedList.size(); j++) {
-			boolean isOk = false;
-			for (int i = 0; i < selectLedList.size(); i++) {
-				if (exitLedList.get(j).equals(selectLedList.get(i))) {
-					isOk = true;
-				}
-				if (!isOk && selectLedList.size() - 1 == i) {
-					Log.e("exit Del", ""+exitLedList.get(j));
-					mCenter.cRemoveFromGroup(mXpgWifiGroup, did, exitLedList.get(j));
-				}
-			}
-		}
+		mCenter.cEditGroup(setmanager.getUid(), setmanager.getToken(), mXpgWifiGroup.gid, et_group_name.getText().toString(), groupMaps);
 	}
 
 	private void saveGroup() {

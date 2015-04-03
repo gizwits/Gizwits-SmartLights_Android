@@ -20,7 +20,6 @@ lampY_frameY.png * Project Name:XPGSdkV4AppBase
  */
 package com.gizwits.ledgateway.activity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,17 +28,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.integer;
-import android.R.interpolator;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.ClipData.Item;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,8 +51,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.account.UserManageActivity;
@@ -71,7 +65,8 @@ import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.config.JsonKeys;
 import com.gizwits.framework.entity.DeviceAlarm;
 import com.gizwits.framework.entity.GroupDevice;
-import com.gizwits.framework.utils.DialogManager;
+import com.gizwits.framework.widget.RefreshableListView;
+import com.gizwits.framework.widget.RefreshableListView.OnRefreshListener;
 import com.gizwits.framework.widget.SlidingMenu;
 import com.gizwits.ledgateway.R;
 import com.gizwits.ledgateway.adapter.GroupAdapter;
@@ -97,7 +92,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	// private XPGWifiDevice device;
 
 	/** The scl content. */
-	private ListView sclContent;
+	private RefreshableListView sclContent;
 
 	/** The m view. */
 	private SlidingMenu mView;
@@ -439,7 +434,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		ivEdit = (ImageView) findViewById(R.id.ivEdit);
 		ivEdit.setTag(1);
 //		ivBack = (ImageView) findViewById(R.id.ivBack);
-		sclContent = (ListView) findViewById(R.id.sclContent);
+		sclContent = (RefreshableListView) findViewById(R.id.sclContent);
 
 		btnSwitch = (TextView) findViewById(R.id.btnSwitch);
 		lightness = (SeekBar) findViewById(R.id.sbLightness);
@@ -578,6 +573,31 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					intent.putExtra("did", ""+centralControlDevice.getDid());
 					startActivity(intent);
 				}
+			}
+		});
+		
+		sclContent.setOnRefreshListener(new OnRefreshListener() {
+			
+			@Override
+			public void onRefresh(RefreshableListView listView) {
+				// TODO Auto-generated method stub
+				mCenter.cGetSubDevicesList(centralControlDevice);
+				mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
+				
+				final Timer timer=new Timer();
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						runOnUiThread(new Runnable() {
+							public void run() {
+								sclContent.completeRefreshing();
+							}
+						});
+						timer.cancel();
+					}
+				}, 2000);
 			}
 		});
 		btnSwitch.setOnClickListener(this);
@@ -838,8 +858,19 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	protected void didGetGroups(int error, List<XPGWifiGroup> groupList2) {
 		// TODO Auto-generated method stub
 		super.didGetGroups(error, groupList2);
+		String gid = "";
+		if (!selectGroup.equals("") && selectGroup != null) {
+			for (int i = 0; i < grouplist.size(); i++) {
+				if (grouplist.get(i).groupName.equals(selectGroup)) {
+					gid = grouplist.get(i).gid;
+				}
+			}
+		}
 		grouplist.clear();
 		for (int i = 0; i < groupList2.size(); i++) {
+			if (!gid.equals("") && gid.equals(groupList2.get(i).gid)) {
+				light_name.setText(groupList2.get(i).groupName);
+			}
 			grouplist.add(groupList2.get(i));
 			groupList2.get(i).setListener(xpgWifiGroupListener);
 			mCenter.cGetGroupDevices(groupList2.get(i));

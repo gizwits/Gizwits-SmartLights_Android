@@ -499,6 +499,25 @@ public class CmdCenter {
 			String productKey,String groupName,List<ConcurrentHashMap<String, String>> specilalDevices) {
 		xpgWifiGCC.addGroup(uid, token, productKey, groupName, specilalDevices);
 	}
+	
+	/**
+	 * 修改分组
+	 * 
+	 * @param uid
+	 *            用户id
+	 * @param token
+	 *            授权令牌
+	 * @param gid
+	 *            指定group id
+	 * @param groupName
+	 *            分组名称
+	 * @param specilalDevices
+	 *            指定specilalDevices          
+	 * */
+	public void cEditGroup(String uid, String token,
+			String gid,String groupName,List<ConcurrentHashMap<String, String>> specilalDevices) {
+		xpgWifiGCC.editGroup(uid, token, gid, groupName, specilalDevices);
+	}
 
 	/**
 	 * 获取分组列表
@@ -553,7 +572,6 @@ public class CmdCenter {
 	 * */
 	public void cRemoveFromGroup(XPGWifiGroup xpgWifiGroup,
 			String did, String subDid) {
-		Log.e(""+did, "sub"+subDid);
 		xpgWifiGroup.removeDevice(did,subDid);
 	}
 	
