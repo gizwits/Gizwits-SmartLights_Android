@@ -376,6 +376,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mCenter.cGetSubDevicesList(centralControlDevice);
 		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 		
+		bottomClose();
+		
 		getStatusProgress.show();
 		final Timer timer=new Timer();
 		timer.schedule(new TimerTask() {
@@ -783,27 +785,27 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 	
-	public boolean checkDeviceExit(List<XPGWifiSubDevice> devices){
-		if (ledList.size() != devices.size()) {
-			return false;
-		}
-		boolean checkOk = true;
-		for (int i = 0; i < ledList.size(); i++) {
-			boolean isExit = false;
-			for (int j = 0; j < devices.size(); j++) {
-				if (devices.get(j).getSubDid().equals(ledList.get(i).getSubDevice().getSubDid())) {
-					isExit = true;
-				}
-				if (!isExit && j == devices.size()) {
-					checkOk = false;
-				}
-			}
-			if (!checkOk) {
-				break;
-			}
-		}
-		return checkOk;
-	}
+//	public boolean checkDeviceExit(List<XPGWifiSubDevice> devices){
+//		if (ledList.size() != devices.size()) {
+//			return false;
+//		}
+//		boolean checkOk = true;
+//		for (int i = 0; i < ledList.size(); i++) {
+//			boolean isExit = false;
+//			for (int j = 0; j < devices.size(); j++) {
+//				if (devices.get(j).getSubDid().equals(ledList.get(i).getSubDevice().getSubDid())) {
+//					isExit = true;
+//				}
+//				if (!isExit && j == devices.size()) {
+//					checkOk = false;
+//				}
+//			}
+//			if (!checkOk) {
+//				break;
+//			}
+//		}
+//		return checkOk;
+//	}
 
 	/**
 	 * 检查出了选中device，其他device有没有连接上
@@ -853,10 +855,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mapList.put("light", ledList);
 		list.add("light");
 		
-		if (!checkDeviceExit(subDeviceList)) {
+//		if (!checkDeviceExit(subDeviceList)) {
 			Log.e("getdeviceExit", "getdeviceExit");
 			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
-		}
+//		}
 		mapList.put("我的LED", ledList);
 		list.add("我的LED");
 		
