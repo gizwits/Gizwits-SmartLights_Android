@@ -985,7 +985,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		} else {
 			if (mXpgWifiDevice != null && mXpgWifiDevice.isConnected()) {
 				mCenter.cDisconnect(mXpgWifiDevice);
-				mXpgWifiDevice = null;
+				DisconnectOtherDevice();
 			}
 			finish();
 		}
