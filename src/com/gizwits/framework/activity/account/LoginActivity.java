@@ -22,6 +22,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -234,6 +235,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void didUserLogin(int error, String errorMessage, String uid,
 			String token) {
+		Log.e("didUserLogin", "didLog");
 		if (!uid.isEmpty() && !token.isEmpty()) {// 登陆成功
 			setmanager.setUserName(etName.getText().toString().trim());
 			setmanager.setPassword(etPsw.getText().toString().trim());

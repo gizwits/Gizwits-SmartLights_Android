@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -115,40 +117,19 @@ public class GroupAdapter extends BaseAdapter {
         //****************************************************************************
         List<LinearLayout> llviews=new ArrayList<LinearLayout>();//保存多于4个灯的llview，用于显示隐藏
         
-        //
         if (list.get(position).equals("我的LED")) {
         	listItemView.item_bg.setBackgroundResource(R.drawable.kuang);
         	listItemView.v_line.setVisibility(View.GONE);
         	listItemView.groupNameTv.setVisibility(View.GONE);
         	if (mapList.get(list.get(position)).size() == 0) {
-        		TextView add=new TextView(mainListActivity);
-	            add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-	            add.setPadding(0, DensityUtils.dp2px(mainListActivity, 10f), 0, 0);
-	            add.setText("Add");
-	            add.setGravity(Gravity.CENTER);
-	            add.setTextColor(Color.parseColor("#FFFFFF"));
-	            add.setCompoundDrawables(null,mainListActivity.add,null,null);
-	            add.setOnClickListener(addClick);
         		llview=new LinearLayout(mainListActivity);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         		llview.setPadding(0, 0, 0, DensityUtils.dp2px(mainListActivity, 10f));
         		listItemView.ll_item.addView(llview);
-        		llview.addView(add);
-        		add=new TextView(mainListActivity);
-                add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                add.setVisibility(View.INVISIBLE);
-        		llview.addView(add);
-        		add=new TextView(mainListActivity);
-                add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                add.setVisibility(View.INVISIBLE);
-        		llview.addView(add);
-        		add=new TextView(mainListActivity);
-                add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                add.setVisibility(View.INVISIBLE);
-        		llview.addView(add);
+        		llview.addView(getAddButton(true));
+        		llview.addView(getAddButton(false));
+        		llview.addView(getAddButton(false));
+        		llview.addView(getAddButton(false));
 			}
 		}else{
 			convertView.setTag(list.get(position));
@@ -173,44 +154,39 @@ public class GroupAdapter extends BaseAdapter {
 			}
         	FrameLayout flayout=new FrameLayout(mainListActivity);
         	flayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-            TextView textview=new TextView(mainListActivity);
-            android.widget.FrameLayout.LayoutParams params=new android.widget.FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, DensityUtils.dp2px(mainListActivity, 7f), 0, 0);
-            params.gravity = Gravity.CENTER;
-            textview.setLayoutParams(params);
-            if (list.get(position).equals("我的LED")) {
-            	textview.setText("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid());
-            }else{
-            	textview.setText("灯"+mapList.get(list.get(position)).get(i).getSdid());
-            }
-            textview.setGravity(Gravity.CENTER);
-            textview.setTextColor(Color.parseColor("#FFFFFF")); 
+             
             if (list.get(position).equals("我的LED")) {
 	            if (mapList.get(list.get(position)).get(i).isOnOff()) {
 	            	if (mainListActivity.selecttv != null) {
-						if (mainListActivity.selecttv.getText().equals(textview.getText())) {
-							textview.setCompoundDrawables(null,mainListActivity.yLightSelect,null,null);
-							mainListActivity.btnSwitch.setText("关灯");
+						if (mainListActivity.selecttv.getText().equals("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid())) {
+							mainListActivity.switchOn();
 							mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
-							mainListActivity.selecttv=textview;
+							mainListActivity.selecttv=getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.yLightSelect, 
+		                    		true, mapList.get(list.get(position)).get(i));
+							flayout.addView(mainListActivity.selecttv);
 						}else{
-			            	textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
+							flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.yLight, 
+		                    		true, mapList.get(list.get(position)).get(i)));
 						}
 					}else{
-		            	textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
+		            	flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.yLight, 
+	                    		true, mapList.get(list.get(position)).get(i)));
 					}
 				}else{
 					if (mainListActivity.selecttv != null) {
-						if (mainListActivity.selecttv.getText().equals(textview.getText())) {
-				            textview.setCompoundDrawables(null,mainListActivity.wLightSelect,null,null);
-				            mainListActivity.btnSwitch.setText("开灯");
+						if (mainListActivity.selecttv.getText().equals("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid())) {
+				            mainListActivity.switchOff();
 				            mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
-				            mainListActivity.selecttv=textview;
+				            mainListActivity.selecttv=getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.wLightSelect, 
+		                    		true, mapList.get(list.get(position)).get(i));
+				            flayout.addView(mainListActivity.selecttv);
 						}else{
-				            textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
+			            	flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.wLight, 
+		                    		true, mapList.get(list.get(position)).get(i)));
 						}
 					}else{
-			            textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
+		            	flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.wLight, 
+	                    		true, mapList.get(list.get(position)).get(i)));
 					}
 				}
             }else{
@@ -234,16 +210,13 @@ public class GroupAdapter extends BaseAdapter {
 				}
             	
             	if (isopenLight) {
-					textview.setCompoundDrawables(null,mainListActivity.yLight,null,null);
+	            	flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSdid(), mainListActivity.yLight, 
+                    		false, mapList.get(list.get(position)).get(i)));
 				}else{
-					textview.setCompoundDrawables(null,mainListActivity.wLight,null,null);
+	            	flayout.addView(getLedView("灯"+mapList.get(list.get(position)).get(i).getSdid(), mainListActivity.wLight, 
+                    		false, mapList.get(list.get(position)).get(i)));
 				}
             }
-            if (list.get(position).equals("我的LED")) {
-                textview.setOnClickListener(ledCtrl);
-            }
-            textview.setTag(mapList.get(list.get(position)).get(i));
-            flayout.addView(textview);
             if (list.get(position).equals("我的LED")) {
                 ImageView ivX=new ImageView(mainListActivity);
                 if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
@@ -262,16 +235,8 @@ public class GroupAdapter extends BaseAdapter {
             }
             llview.addView(flayout); 
             if (list.get(position).equals("我的LED")) {
-        		TextView add=new TextView(mainListActivity);
-                add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                add.setText("Add");
-                add.setGravity(Gravity.CENTER);
-                add.setTextColor(Color.parseColor("#FFFFFF"));
-                add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                add.setOnClickListener(addClick);
             	if (mapList.get(list.get(position)).size() % 4 != 0 && (i+1) == mapList.get(list.get(position)).size()) {
-                    add.setPadding(0, DensityUtils.dp2px(mainListActivity, 10f), 0, 0);
-            		llview.addView(add);
+            		llview.addView(getAddButton(true));
     			}else if(mapList.get(list.get(position)).size() % 4 == 0 && (i+1) == mapList.get(list.get(position)).size()){
     				llview=new LinearLayout(mainListActivity);
             		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -280,45 +245,21 @@ public class GroupAdapter extends BaseAdapter {
                 		llview.setVisibility(View.GONE);
 					}
             		listItemView.ll_item.addView(llview);
-            		llview.addView(add);
-            		add=new TextView(mainListActivity);
-                    add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                    add.setVisibility(View.INVISIBLE);
-            		llview.addView(add);
-            		add=new TextView(mainListActivity);
-                    add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                    add.setVisibility(View.INVISIBLE);
-            		llview.addView(add);
-            		add=new TextView(mainListActivity);
-                    add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-                    add.setCompoundDrawables(null,mainListActivity.add,null,null);
-                    add.setVisibility(View.INVISIBLE);
-            		llview.addView(add);
+            		llview.addView(getAddButton(true));
+            		llview.addView(getAddButton(false));
+            		llview.addView(getAddButton(false));
+            		llview.addView(getAddButton(false));
             		llviews.add(llview);
     			}
 			}
             if (mapList.get(list.get(position)).size() % 4 > 0 && i == mapList.get(list.get(position)).size() - 1) {
             	if (list.get(position).equals("我的LED")) {
                 	for (int j = 0; j <= (4 - (mapList.get(list.get(position)).size() % 4) - 2); j++) {
-    					TextView textviews=new TextView(mainListActivity);
-    		            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-    		            textviews.setText("null");
-    		            textviews.setGravity(Gravity.CENTER);
-    		            textviews.setVisibility(View.INVISIBLE);
-    		            textviews.setCompoundDrawables(null,mainListActivity.wLight,null,null);
-    		            llview.addView(textviews); 
+    		            llview.addView(getAddButton(false)); 
     				};
 				}else{
 	            	for (int j = 0; j <= (4 - (mapList.get(list.get(position)).size() % 4) - 1); j++) {
-						TextView textviews=new TextView(mainListActivity);
-			            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-			            textviews.setText("null");
-			            textviews.setGravity(Gravity.CENTER);
-			            textviews.setVisibility(View.INVISIBLE);
-			            textviews.setCompoundDrawables(null,mainListActivity.wLight,null,null);
-			            llview.addView(textviews); 
+			            llview.addView(getAddButton(false)); 
 					};
 				}
 			}
@@ -437,9 +378,9 @@ public class GroupAdapter extends BaseAdapter {
 			mainListActivity.selecttv = ((TextView)v);
 			mainListActivity.selectSubDevice = gSelectDevice.getSubDevice();
             if (gSelectDevice.isOnOff()) {
-            	mainListActivity.btnSwitch.setText("关灯");
+            	mainListActivity.switchOn();
 			}else{
-				mainListActivity.btnSwitch.setText("开灯");
+				mainListActivity.switchOn();
 			}
             mainListActivity.light_name.setText(mainListActivity.selecttv.getText().toString());
             mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
@@ -470,9 +411,9 @@ public class GroupAdapter extends BaseAdapter {
 						mainListActivity.mCenter.cGetSubStatus(mainListActivity.selectSubDevice);
 						mainListActivity.selectGroup = groupName;
 			            if (gSelectDevice.isOnOff()) {
-			            	mainListActivity.btnSwitch.setText("关灯");
+			            	mainListActivity.switchOn();
 						}else{
-							mainListActivity.btnSwitch.setText("开灯");
+							mainListActivity.switchOff();
 						}
 			            mainListActivity.light_name.setText(groupName);
 			            mainListActivity.edit_group.setVisibility(View.VISIBLE);
@@ -510,4 +451,35 @@ public class GroupAdapter extends BaseAdapter {
 			mainListActivity.startActivity(intent);
 		}
 	};
+	
+	public TextView getAddButton(boolean visible){
+		TextView add=new TextView(mainListActivity);
+        add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
+        add.setPadding(0, DensityUtils.dp2px(mainListActivity, 10f), 0, 0);
+        add.setText("Add");
+        add.setGravity(Gravity.CENTER);
+        add.setTextColor(Color.parseColor("#FFFFFF"));
+        add.setCompoundDrawables(null,mainListActivity.add,null,null);
+        add.setOnClickListener(addClick);
+        if (!visible) {
+            add.setVisibility(View.INVISIBLE);
+		}
+        return add;
+	}
+	
+	public TextView getLedView(String name, Drawable drawable, Boolean clickAble, GroupDevice gDevice){
+		TextView textview=new TextView(mainListActivity);
+        android.widget.FrameLayout.LayoutParams params=new android.widget.FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, DensityUtils.dp2px(mainListActivity, 7f), 0, 0);
+        params.gravity = Gravity.CENTER;
+        textview.setLayoutParams(params);
+        textview.setText(name);
+        textview.setGravity(Gravity.CENTER);
+        textview.setTextColor(Color.parseColor("#FFFFFF"));
+        textview.setOnClickListener(ledCtrl);
+        textview.setTag(gDevice);
+        textview.setCompoundDrawables(null,drawable,null,null);
+        textview.setClickable(clickAble);
+        return textview;
+	}
 }  

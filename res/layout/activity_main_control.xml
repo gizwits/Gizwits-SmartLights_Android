@@ -167,7 +167,7 @@
 				            android:gravity="center"
 				            android:text="关灯"
 				            android:layout_gravity="center_horizontal"
-				            android:textColor="#51A4D4"/>
+				            android:textColor="@color/text_blue"/>
                         
                         <View 
 	                        android:layout_width="match_parent"

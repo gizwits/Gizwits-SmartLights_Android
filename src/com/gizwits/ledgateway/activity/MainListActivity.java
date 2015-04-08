@@ -129,7 +129,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	public ImageView edit_group;
 	
 	/** the TextView turn on off */
-	public TextView btnSwitch;
+	private TextView btnSwitch;
 	
 	/** the sb light adjust */
 	public SeekBar lightness;
@@ -170,16 +170,20 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** the wifisubdevice status subDevice */
 	XPGWifiSubDevice subDevice;
 	
-	/** the drawable pic white light */
+	/** the Drawable pic white light */
 	public Drawable wLight;
-	/** the drawable pic yellow light */
+	/** the Drawable pic yellow light */
 	public Drawable yLight;
-	/** the drawable pic white light select */
+	/** the Drawable pic white light select */
 	public Drawable wLightSelect;
-	/** the drawable pic yellow light select */
+	/** the Drawable pic yellow light select */
 	public Drawable yLightSelect;
-	/** the drawable pic add */
+	/** the Drawable pic add */
 	public Drawable add;
+	/** the Drawable pic power_on */
+	public Drawable power_on;
+	/** the Drawable pic power_off */
+	public Drawable power_off;
 	
 	/** the groupadapter devicelist */
 	public GroupAdapter mGroupAdapter;
@@ -273,12 +277,14 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				}
 			case UPDATE_UI:
 				for (int i = 0; i < ledList.size(); i++) {
-					if (ledList.get(i) == null) {
-						return;
-					}
-					if (ledList.get(i).getSubDevice().getSubDid().equals(subDevice.getSubDid())) {
-						ledList.get(i).setOnOff((Boolean) statuMap.get(JsonKeys.ON_OFF));
-						ledList.get(i).setLightness(Integer.parseInt(statuMap.get(JsonKeys.LIGHTNESS).toString()));
+					try {
+						if (ledList.get(i).getSubDevice().getSubDid().equals(subDevice.getSubDid())) {
+							ledList.get(i).setOnOff((Boolean) statuMap.get(JsonKeys.ON_OFF));
+							ledList.get(i).setLightness(Integer.parseInt(statuMap.get(JsonKeys.LIGHTNESS).toString()));
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
 					}
 				}
 				boolean isOk = false;
@@ -287,9 +293,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 						for (int i = 0; i < ledList.size(); i++) {
 							if (ledList.get(i).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(j))) {
 								if(ledList.get(i).isOnOff()){
-									btnSwitch.setText("关灯");
+									switchOn();
 								}else {
-									btnSwitch.setText("开灯");
+									switchOff();
 								}
 								isOk = true;
 								break;
@@ -366,6 +372,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 		mAdapter.notifyDataSetChanged();
 
+		Log.e("GetSubDevices", "GetSubDevices");
 		mCenter.cGetSubDevicesList(centralControlDevice);
 		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 		
@@ -380,7 +387,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				timer.cancel();
 			}
 		}, 3000);
-//		handler.sendEmptyMessage(handler_key.GET_STATUE.ordinal());
 	}
 
 	/**
@@ -395,6 +401,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		wLightSelect.setBounds(0, 0, wLightSelect.getMinimumWidth(), wLightSelect.getMinimumHeight());
 		yLightSelect = this.getResources().getDrawable(R.drawable.lampy_frameg); 
 		yLightSelect.setBounds(0, 0, yLightSelect.getMinimumWidth(), yLightSelect.getMinimumHeight());
+		power_on = this.getResources().getDrawable(R.drawable.icon_power); 
+		power_on.setBounds(0, 0, power_on.getMinimumWidth(), power_on.getMinimumHeight());
+		power_off = this.getResources().getDrawable(R.drawable.icon_power_off); 
+		power_off.setBounds(0, 0, power_on.getMinimumWidth(), power_on.getMinimumHeight());
 		add = this.getResources().getDrawable(R.drawable.icon_add); 
 		add.setBounds(0, 0, add.getMinimumWidth(), add.getMinimumHeight());
 		
@@ -528,37 +538,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 		alpha_bg.setOnClickListener(this);
-		ivEdit.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Log.e("showDel", ""+ivDels.size());
-				bottomClose();
-				
-				if (ivEdit.getTag().toString().equals("1")) {
-					ivEdit.setImageResource(R.drawable.icon_confirm);
-					ivEdit.setTag(0);
-				}else{
-					ivEdit.setImageResource(R.drawable.icon_edit_w);
-					ivEdit.setTag(1);
-				}
-				
-				if (ivDels.size() < 1) {
-					return;
-				}
-				
-				if (ivEdit.getTag().toString().equals("0")) {
-					for (ImageView ivDel : ivDels) {
-							ivDel.setVisibility(View.VISIBLE);
-					}
-				}else{
-					for (ImageView ivDel : ivDels) {
-						ivDel.setVisibility(View.INVISIBLE);
-					}
-				}
-			}
-		});
+		ivEdit.setOnClickListener(this);
 		sclContent.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -579,7 +559,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				// TODO Auto-generated method stub
-				getLedStatus();
+				mCenter.cGetSubDevicesList(centralControlDevice);
 				final Timer timer=new Timer();
 				timer.schedule(new TimerTask() {
 					
@@ -597,21 +577,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 		btnSwitch.setOnClickListener(this);
-	}
-
-	/**
-	 * 防止循环调用.
-	 * 
-	 * @author Administrator
-	 * @param on
-	 *            the new listen null
-	 * @return void
-	 * @Title: setListenNull
-	 * @Description: TODO
-	 */
-	private void setListenNull(boolean on) {
-		// cbWindShake.setOnCheckedChangeListener(on ? null : this);
-		// rgWing.setOnCheckedChangeListener(on ? null : this);
 	}
 
 	/*
@@ -636,7 +601,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.btnSwitch:
-			if (switchTime + 3000 > System.currentTimeMillis()) {
+			if (switchTime + 600 > System.currentTimeMillis()) {
 				return;
 			}
 			switchTime = System.currentTimeMillis();
@@ -654,11 +619,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 						}
 					}
 				}
-//				if (btnSwitch.getText().toString().equals("关灯")){
-//					btnSwitch.setText("开灯");
-//				}else{
-//					btnSwitch.setText("关灯");
-//				}
 			}else {
 				if (btnSwitch.getText().toString().equals("关灯")) {
 					mCenter.cSwitchOn(selectSubDevice, false);
@@ -679,6 +639,32 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		case R.id.black_alpha_bg:
 			bottomClose();
 			break;
+		case R.id.ivEdit:
+			Log.e("showDel", ""+ivDels.size());
+			bottomClose();
+			
+			if (ivEdit.getTag().toString().equals("1")) {
+				ivEdit.setImageResource(R.drawable.icon_confirm);
+				ivEdit.setTag(0);
+			}else{
+				ivEdit.setImageResource(R.drawable.icon_edit_w);
+				ivEdit.setTag(1);
+			}
+			
+			if (ivDels.size() < 1) {
+				return;
+			}
+			
+			if (ivEdit.getTag().toString().equals("0")) {
+				for (ImageView ivDel : ivDels) {
+						ivDel.setVisibility(View.VISIBLE);
+				}
+			}else{
+				for (ImageView ivDel : ivDels) {
+					ivDel.setVisibility(View.INVISIBLE);
+				}
+			}
+			break;
 		}
 	}
 	
@@ -693,7 +679,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * 关闭底部控制栏
 	 */
-	private void bottomClose(){
+	public void bottomClose(){
         llBottom.setVisibility(View.GONE);
         alpha_bg.setVisibility(View.GONE);
         if (selecttv != null) {
@@ -706,6 +692,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
         selectSubDevice = null;
         selectGroup = "";
         selecttv = null;
+	}
+	
+	public void switchOn(){
+		btnSwitch.setText("关灯");
+    	btnSwitch.setTextColor(getResources().getColor(R.color.text_blue));
+    	btnSwitch.setCompoundDrawables(null,power_on,null,null);
+	}
+	
+	public void switchOff(){
+		btnSwitch.setText("开灯");
+    	btnSwitch.setTextColor(getResources().getColor(R.color.text_gray));
+    	btnSwitch.setCompoundDrawables(null,power_off,null,null);
 	}
 
 	/**
@@ -781,7 +779,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			Message msg=new Message();
 			msg.what = handler_key.DEVICE_GETSTATUS.ordinal();
 			msg.obj = ledList.get(i).getSubDevice();
-			handler.sendMessageDelayed(msg, 600 * (i+1));
+			handler.sendMessageDelayed(msg, 500 * (i+1));
 		}
 	}
 	
@@ -791,8 +789,17 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 		boolean checkOk = true;
 		for (int i = 0; i < ledList.size(); i++) {
-			if (!devices.contains(ledList.get(i).getSubDevice())) {
-				checkOk = false;
+			boolean isExit = false;
+			for (int j = 0; j < devices.size(); j++) {
+				if (devices.get(j).getSubDid().equals(ledList.get(i).getSubDevice().getSubDid())) {
+					isExit = true;
+				}
+				if (!isExit && j == devices.size()) {
+					checkOk = false;
+				}
+			}
+			if (!checkOk) {
+				break;
 			}
 		}
 		return checkOk;
@@ -847,6 +854,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		list.add("light");
 		
 		if (!checkDeviceExit(subDeviceList)) {
+			Log.e("getdeviceExit", "getdeviceExit");
 			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
 		}
 		mapList.put("我的LED", ledList);
@@ -914,7 +922,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.didGetDevices(error, devicesList);
 		if (devicesList == null) {
-			Log.e("error", ""+error);
 			return;
 		}
 		Log.e("didGetDevices", ""+devicesList.toString());

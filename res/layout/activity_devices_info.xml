@@ -102,7 +102,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
-            android:text="@string/delete_aircondition" />
+            android:text="@string/delete_centercontrol" />
     </RelativeLayout>
 
 </LinearLayout>
