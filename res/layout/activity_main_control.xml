@@ -173,13 +173,33 @@
 	                        android:layout_width="match_parent"
 	                        android:layout_height="1dp"
 	    					android:background="#DCDCDC"/>
-				
-				        <SeekBar
-				            android:id="@+id/sbLightness"
+						
+                        <RelativeLayout 
 				            android:layout_width="fill_parent"
-				            android:layout_height="wrap_content"
-				            android:layout_margin="5dp"
-				            android:max="255"/>
+				            android:layout_height="50dp"
+				            android:gravity="center_vertical">
+                            <ImageView 
+                                android:id="@+id/i"
+                                android:layout_alignParentLeft="true"
+					            android:layout_width="wrap_content"
+					            android:layout_height="wrap_content"
+					            android:layout_marginLeft="4dp"
+					            android:src="@drawable/icon_light"/>
+					        <SeekBar
+					            android:id="@+id/sbLightness"
+					            android:layout_width="match_parent"
+					            android:layout_height="wrap_content"
+					            android:layout_toLeftOf="@+id/j"
+                                android:layout_toRightOf="@+id/i"
+					            android:max="255"/>
+                            <ImageView 
+                                android:id="@+id/j"
+                                android:layout_alignParentRight="true"
+					            android:layout_width="wrap_content"
+					            android:layout_height="wrap_content"
+					            android:layout_marginRight="4dp"
+					            android:src="@drawable/icon_light"/>
+				        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

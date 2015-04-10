@@ -117,11 +117,13 @@ public class GroupAdapter extends BaseAdapter {
         //****************************************************************************
         List<LinearLayout> llviews=new ArrayList<LinearLayout>();//保存多于4个灯的llview，用于显示隐藏
         
+        //设置item上方Text&line是否显示(若为我的LED隐藏，其余显示)
         if (list.get(position).equals("我的LED")) {
         	listItemView.item_bg.setBackgroundResource(R.drawable.kuang);
         	listItemView.v_line.setVisibility(View.GONE);
         	listItemView.groupNameTv.setVisibility(View.GONE);
         	if (mapList.get(list.get(position)).size() == 0) {
+                //如我的Led中灯为空，设置Add按钮
         		llview=new LinearLayout(mainListActivity);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         		llview.setPadding(0, 0, 0, DensityUtils.dp2px(mainListActivity, 10f));
@@ -132,6 +134,7 @@ public class GroupAdapter extends BaseAdapter {
         		llview.addView(getAddButton(false));
 			}
 		}else{
+	        //其他Item设置删除按钮，是否可用
 			convertView.setTag(list.get(position));
 	        convertView.setOnClickListener(groupCtrl);
 			listItemView.ivDel.setTag(list.get(position));
@@ -141,23 +144,31 @@ public class GroupAdapter extends BaseAdapter {
 			}
 			mainListActivity.ivDels.add(listItemView.ivDel);
 		}
+        //根据设备自动生成LedView，循环设置入Item
         for (int i = 0; i < mapList.get(list.get(position)).size(); i++) {
         	if (i % 4 == 0) {
+        		//每4盏灯新建一个llview，防止灯view
         		llview=new LinearLayout(mainListActivity);
         		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         		llview.setPadding(0, 0, 0, DensityUtils.dp2px(mainListActivity, 10f));
-        		if (i >= 4 && !mainListActivity.showSelectDevices.contains(list.get(position))) {
-        			llview.setVisibility(View.GONE);
+        		if (i >= 4 ) {
+        			//将需要隐藏显示的llview放入view数组
         			llviews.add(llview);
+        			if (!mainListActivity.showItemDevices.contains(list.get(position))) {
+            			//若已展开显示全部view,若未展开则只显示一排view
+            			llview.setVisibility(View.GONE);
+					}
 				}
-        		listItemView.ll_item.addView(llview);
+        		listItemView.ll_item.addView(llview);//将设置灯的LinearLayout放入Item
 			}
-        	FrameLayout flayout=new FrameLayout(mainListActivity);
+        	FrameLayout flayout=new FrameLayout(mainListActivity);//每一个Led
         	flayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
              
             if (list.get(position).equals("我的LED")) {
+            	//设置Led灯状态
 	            if (mapList.get(list.get(position)).get(i).isOnOff()) {
 	            	if (mainListActivity.selecttv != null) {
+	            		//若该Led灯被选中则设置绿边图片，与底部案件状态一同修改
 						if (mainListActivity.selecttv.getText().equals("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid())) {
 							mainListActivity.switchOn();
 							mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
@@ -190,6 +201,7 @@ public class GroupAdapter extends BaseAdapter {
 					}
 				}
             }else{
+            	//设置分组中的Led灯状态，只选取本地Led灯组中含有的本组第一盏灯状态，设置整组灯状态
             	boolean isopenLight = false ;
             	boolean isIntoCheck = false;
             	for (int j = 0; j < mapList.get(list.get(position)).size(); j++) {
@@ -218,6 +230,7 @@ public class GroupAdapter extends BaseAdapter {
 				}
             }
             if (list.get(position).equals("我的LED")) {
+            	//如果分组为我的Led灯，则放入删除按钮
                 ImageView ivX=new ImageView(mainListActivity);
                 if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
         			ivX.setVisibility(View.VISIBLE);
@@ -234,14 +247,17 @@ public class GroupAdapter extends BaseAdapter {
             	flayout.addView(ivX);
             }
             llview.addView(flayout); 
+            
+            //*******************************在我的led分组中，添加add按键*****************************
             if (list.get(position).equals("我的LED")) {
             	if (mapList.get(list.get(position)).size() % 4 != 0 && (i+1) == mapList.get(list.get(position)).size()) {
             		llview.addView(getAddButton(true));
     			}else if(mapList.get(list.get(position)).size() % 4 == 0 && (i+1) == mapList.get(list.get(position)).size()){
+    				//如果灯泡刚好求余4为0，则新建一行llview，放入add按钮，并且设置隐藏view
     				llview=new LinearLayout(mainListActivity);
             		llview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             		llview.setPadding(0, 10, 0, 10);
-            		if (!mainListActivity.showSelectDevices.contains("我的LED")) {
+            		if (!mainListActivity.showItemDevices.contains("我的LED")) {
                 		llview.setVisibility(View.GONE);
 					}
             		listItemView.ll_item.addView(llview);
@@ -252,8 +268,10 @@ public class GroupAdapter extends BaseAdapter {
             		llviews.add(llview);
     			}
 			}
+            //**********************************设置结算后最后一个llview中少于4盏灯的隐藏view******************************
             if (mapList.get(list.get(position)).size() % 4 > 0 && i == mapList.get(list.get(position)).size() - 1) {
             	if (list.get(position).equals("我的LED")) {
+            		//由于Led灯中多一个Add按键，则相应减少一个隐藏Button
                 	for (int j = 0; j <= (4 - (mapList.get(list.get(position)).size() % 4) - 2); j++) {
     		            llview.addView(getAddButton(false)); 
     				};
@@ -263,8 +281,9 @@ public class GroupAdapter extends BaseAdapter {
 					};
 				}
 			}
+            //***********************************************************************************
 		}       
-        listItemView.ll_item_bottom.setTag(llviews);
+        listItemView.ll_item_bottom.setTag(llviews);//将需要展开的llview，保存于Tag中，方便获取
         listItemView.ll_item_bottom.setOnClickListener(showItemClick);
         return convertView;     
     }
@@ -290,13 +309,14 @@ public class GroupAdapter extends BaseAdapter {
 			}
 			FrameLayout ll = (FrameLayout) v.getParent();
 			if (llviews.get(0).getVisibility() == View.GONE) {
-				mainListActivity.showSelectDevices.add(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
+				//保存已展开项
+				mainListActivity.showItemDevices.add(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
 				for (LinearLayout linearLayout : llviews) {
 					linearLayout.setVisibility(View.VISIBLE);
 				}
 				iv_bottom.setImageResource(R.drawable.icon_close);
 			}else{
-				mainListActivity.showSelectDevices.remove(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
+				mainListActivity.showItemDevices.remove(((TextView)ll.findViewById(R.id.tv_name)).getText().toString());
 				for (LinearLayout linearLayout : llviews) {
 					linearLayout.setVisibility(View.GONE);
 				}
@@ -324,7 +344,6 @@ public class GroupAdapter extends BaseAdapter {
 						if (group.groupName.equals(groupName)) {
 							mainListActivity.mCenter.cDeleteGroups(mainListActivity.setmanager.getUid(), 
 									mainListActivity.setmanager.getToken(), group);
-							mainListActivity.mCenter.cGetGroups(mainListActivity.setmanager.getUid(), mainListActivity.setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
 						}
 					}
 					DialogManager.dismissDialog(mainListActivity, delDialog);
@@ -382,6 +401,7 @@ public class GroupAdapter extends BaseAdapter {
 			}else{
 				mainListActivity.switchOn();
 			}
+            mainListActivity.edit_group.setVisibility(View.INVISIBLE);
             mainListActivity.light_name.setText(mainListActivity.selecttv.getText().toString());
             mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
             mainListActivity.bottomShow();
@@ -398,11 +418,7 @@ public class GroupAdapter extends BaseAdapter {
 			// TODO Auto-generated method stub
 			String groupName = v.getTag().toString();
 			boolean isShowOk = false;
-			
-			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
-				return;
-			}
-			
+			//分组控制中底部菜单弹出,并且获取现有的ledlist中包含group的第一设备状态
 			for (int j = 0; j < mainListActivity.groupMapList.get(groupName).size(); j++) {
 				for (int i = 0; i < mainListActivity.ledList.size() ; i++) {
 					if (mainListActivity.groupMapList.get(groupName).get(j).equals(mainListActivity.ledList.get(i).getSubDevice().getSubDid())) {
@@ -452,6 +468,11 @@ public class GroupAdapter extends BaseAdapter {
 		}
 	};
 	
+	/**
+	 * 获取自动生成的Add按钮&充当占位按钮
+	 * @param visible view是否可见
+	 * @return
+	 */
 	public TextView getAddButton(boolean visible){
 		TextView add=new TextView(mainListActivity);
         add.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -467,6 +488,14 @@ public class GroupAdapter extends BaseAdapter {
         return add;
 	}
 	
+	/**
+	 * 生成Led按钮
+	 * @param name 灯名
+	 * @param drawable 设置view上方图片
+	 * @param clickAble 是否可单击
+	 * @param gDevice view tag GroupDevice
+	 * @return
+	 */
 	public TextView getLedView(String name, Drawable drawable, Boolean clickAble, GroupDevice gDevice){
 		TextView textview=new TextView(mainListActivity);
         android.widget.FrameLayout.LayoutParams params=new android.widget.FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

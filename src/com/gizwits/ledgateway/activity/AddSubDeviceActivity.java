@@ -46,7 +46,7 @@ public class AddSubDeviceActivity extends BaseActivity implements OnClickListene
 			switch (key) {
 			case START:
 				Log.e("add", "add "+centralControlDevice.getDid() +" "+centralControlDevice.getProductName());
-				mCenter.cAddSubDevice(centralControlDevice);
+				mCenter.cAddSubDevice(centralControlDevice);//发送中控自动配置指令
 				break;
 			default:
 				break;

@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -65,6 +66,8 @@ import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.config.JsonKeys;
 import com.gizwits.framework.entity.DeviceAlarm;
 import com.gizwits.framework.entity.GroupDevice;
+import com.gizwits.framework.utils.DensityUtil;
+import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.framework.widget.RefreshableListView;
 import com.gizwits.framework.widget.RefreshableListView.OnRefreshListener;
 import com.gizwits.framework.widget.SlidingMenu;
@@ -103,6 +106,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** the btn alpha bg */
 	private Button alpha_bg;
 	
+	/** the ll foot. */
 	private LinearLayout llFooter;
 
 	/** The ll bottom. */
@@ -126,6 +130,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** the TextVIew light_name */
 	public TextView light_name;
 	
+	/** the iv bottom edit_group Btn*/
 	public ImageView edit_group;
 	
 	/** the TextView turn on off */
@@ -140,6 +145,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The lv device. */
 	private ListView lvDevice;
 	
+	/** the pdialog getStatusProgress*/
 	private ProgressDialog getStatusProgress;
 
 	/** The device data map. */
@@ -156,15 +162,22 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 
 	/** The progress dialog. */
 	private ProgressDialog progressDialog;
+	
+	/** The disconnect dialog. */
+	private Dialog mDisconnectDialog;
 
 	/** The XPGWifiCentralControlDevice centralControlDevice */
 	public XPGWifiCentralControlDevice centralControlDevice;
 	
 	/** the list device */
 	public Map<String, List<GroupDevice>> mapList=new HashMap<String, List<GroupDevice>>();
+	/** the list groupList */
 	public Map<String, List<String>> groupMapList = new HashMap<String, List<String>>();
+	/** the list ledList */
 	public List<GroupDevice> ledList = new ArrayList<GroupDevice>();
+	/** the list item_name_list */
 	public List<String> list = new ArrayList<String>();
+	/** the list Delete Btn list */
 	public List<ImageView> ivDels = new ArrayList<ImageView>();
 	
 	/** the wifisubdevice status subDevice */
@@ -196,8 +209,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	
 	public String selectGroup = "";
 	
-	/** the device select */
-	public List<String> showSelectDevices = new ArrayList<String>();
+	/** the device select show Item */
+	public List<String> showItemDevices = new ArrayList<String>();
 
 	/** 是否超时标志位 */
 	private boolean isTimeOut = false;
@@ -312,10 +325,14 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				mGroupAdapter.notifyDataSetChanged();
 				break;
 			case DISCONNECTED:
-				mCenter.cDisconnect(mXpgWifiDevice);
+				Log.e(TAG, "disconnnect");
+				if (!mView.isOpen()) {
+					DialogManager.showDialog(MainListActivity.this,
+							mDisconnectDialog);
+				}
 				break;
 			case GET_STATUE:
-				mCenter.cGetStatus(mXpgWifiDevice);
+//				mCenter.cGetStatus(mXpgWifiDevice);
 				break;
 			case LOGIN_SUCCESS:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
@@ -327,13 +344,11 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				break;
 			case LOGIN_FAIL:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
-				progressDialog.cancel();
-				ToastUtils.showShort(MainListActivity.this, "设备连接失败");
+				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
 				break;
 			case LOGIN_TIMEOUT:
 				isTimeOut = true;
-				progressDialog.cancel();
-				ToastUtils.showShort(MainListActivity.this, "设备连接超时");
+				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
 				break;
 			}
 		}
@@ -363,18 +378,15 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		initBindList();
-		mAdapter.setChoosedPos(-1);
-		for (int i = 0; i < bindlist.size(); i++) {
-			if (bindlist.get(i).getDid()
-					.equalsIgnoreCase(mXpgWifiDevice.getDid()))
-				mAdapter.setChoosedPos(i);
-		}
-		mAdapter.notifyDataSetChanged();
+		refreshMenu();
+		
+		Log.e("centralControlsetListener", "centralControlsetListener");
+		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
+		centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
 
 		Log.e("GetSubDevices", "GetSubDevices");
-		mCenter.cGetSubDevicesList(centralControlDevice);
-		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);
+		mCenter.cGetSubDevicesList(centralControlDevice);//获取子设备
+		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);//获取组
 		
 		bottomClose();
 		
@@ -390,11 +402,40 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 		}, 3000);
 	}
+	
+	/**
+	 * 更新菜单界面.
+	 * 
+	 * @return void
+	 */
+	private void refreshMenu() {
+		initBindList();
+		mAdapter.setChoosedPos(-1);
+		for (int i = 0; i < bindlist.size(); i++) {
+			if (bindlist.get(i).getDid()
+					.equalsIgnoreCase(mXpgWifiDevice.getDid()))
+				mAdapter.setChoosedPos(i);
+		}
+		
+		//当前绑定列表没有当前操作设备
+		if(mAdapter.getChoosedPos()==-1){
+		mAdapter.setChoosedPos(0);
+		mXpgWifiDevice=mAdapter.getItem(0);
+		alarmList.clear();
+		}
+			
+		mAdapter.notifyDataSetChanged();
+		
+		int px = DensityUtil.dip2px(this, mAdapter.getCount() * 50);
+		lvDevice.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, px));
+	}
 
 	/**
 	 * Inits the params.
 	 */
 	private void initParams() {
+		//初始化获取Drawable图片
 		wLight = this.getResources().getDrawable(R.drawable.lampw_framew); 
 		wLight.setBounds(0, 0, wLight.getMinimumWidth(), wLight.getMinimumHeight());
 		yLight = this.getResources().getDrawable(R.drawable.lampy_framey); 
@@ -413,6 +454,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		statuMap = new ConcurrentHashMap<String, Object>();
 		alarmList = new ArrayList<DeviceAlarm>();
 		alarmShowList = new ArrayList<String>();
+		//the normal data
 		mapList.put("light", ledList);
 		mapList.put("我的LED", ledList);
 		mapList.put("group", ledList);
@@ -424,12 +466,22 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mGroupAdapter = new GroupAdapter(this, mapList, list);
 		sclContent.setAdapter(mGroupAdapter);
 
-		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
-		centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
-		
 		getStatusProgress = new ProgressDialog(this);
 		getStatusProgress.setMessage("获取灯状态...");
 		getStatusProgress.setCancelable(false);
+		
+		mDisconnectDialog = DialogManager.getDisconnectDialog(this,
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						DialogManager.dismissDialog(MainListActivity.this,
+								mDisconnectDialog);
+						IntentUtils.getInstance().startActivity(
+								MainListActivity.this,
+								DeviceListActivity.class);
+						finish();
+					}
+				});
 	}
 
 	/**
@@ -561,6 +613,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				// TODO Auto-generated method stub
+//				getLedStatus();
 				mCenter.cGetSubDevicesList(centralControlDevice);
 				final Timer timer=new Timer();
 				timer.schedule(new TimerTask() {
@@ -628,7 +681,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					mCenter.cSwitchOn(selectSubDevice, true);
 				}
 			}
-			getLedStatus();
+			
+//			final Timer timer=new Timer();
+//			timer.schedule(new TimerTask() {
+//				
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					getLedStatus();
+//					timer.cancel();
+//				}
+//			}, 2000);
+//			getLedStatus();
 			break;
 		case R.id.edit_group:
 			Intent intent = new Intent(MainListActivity.this, EditGroupActivity.class);
@@ -696,12 +760,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
         selecttv = null;
 	}
 	
+	/**
+	 * 开灯状态下，底部按钮switch
+	 */
 	public void switchOn(){
 		btnSwitch.setText("关灯");
     	btnSwitch.setTextColor(getResources().getColor(R.color.text_blue));
     	btnSwitch.setCompoundDrawables(null,power_on,null,null);
 	}
 	
+	/**
+	 * 关灯状态下，底部按钮switch
+	 */
 	public void switchOff(){
 		btnSwitch.setText("开灯");
     	btnSwitch.setTextColor(getResources().getColor(R.color.text_gray));
@@ -776,35 +846,23 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 
 	}
 	
+	/**
+	 * 获取子设备灯状态
+	 */
 	public void getLedStatus(){
 		for (int i = 0; i < ledList.size(); i++) {
 			Message msg=new Message();
 			msg.what = handler_key.DEVICE_GETSTATUS.ordinal();
 			msg.obj = ledList.get(i).getSubDevice();
-			handler.sendMessageDelayed(msg, 500 * (i+1));
+			handler.sendMessage(msg);
 		}
 	}
 	
 //	public boolean checkDeviceExit(List<XPGWifiSubDevice> devices){
-//		if (ledList.size() != devices.size()) {
-//			return false;
+//		if (devices == null) {
+//			return true;
 //		}
-//		boolean checkOk = true;
-//		for (int i = 0; i < ledList.size(); i++) {
-//			boolean isExit = false;
-//			for (int j = 0; j < devices.size(); j++) {
-//				if (devices.get(j).getSubDid().equals(ledList.get(i).getSubDevice().getSubDid())) {
-//					isExit = true;
-//				}
-//				if (!isExit && j == devices.size()) {
-//					checkOk = false;
-//				}
-//			}
-//			if (!checkOk) {
-//				break;
-//			}
-//		}
-//		return checkOk;
+//		return ledList.size() == devices.size();
 //	}
 
 	/**
@@ -843,6 +901,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		
 	}
 	
+	//每一次获取子设备，都重新设置ledList,maplist,list
 	@Override
 	protected void didSubDiscovered(int error,
 			List<XPGWifiSubDevice> subDeviceList) {
@@ -855,10 +914,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mapList.put("light", ledList);
 		list.add("light");
 		
+//		Log.e("1", "1");
 //		if (!checkDeviceExit(subDeviceList)) {
 			Log.e("getdeviceExit", "getdeviceExit");
 			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
 //		}
+//		Log.e("2", "2");
 		mapList.put("我的LED", ledList);
 		list.add("我的LED");
 		
@@ -900,6 +961,35 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.didGetGroups(error, groupList2);
 		String gid = "";
+		if (groupList2 == null) {
+			return;
+		}
+		if (groupList2.size() == 0) {
+			list.clear();
+			mapList.clear();
+			mapList.put("light", ledList);
+			list.add("light");
+			mapList.put("我的LED", ledList);
+			list.add("我的LED");
+			mapList.put("group", ledList);
+			list.add("group");
+			mapList.put("addGroup", ledList);
+			list.add("addGroup");
+
+			grouplist.clear();
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					if (ivDels.size() > 0) {
+						ivDels.clear();
+					}
+					mGroupAdapter.notifyDataSetChanged();
+				}
+			});
+			return;
+		}
 		if (!selectGroup.equals("") && selectGroup != null) {
 			for (int i = 0; i < grouplist.size(); i++) {
 				if (grouplist.get(i).groupName.equals(selectGroup)) {
@@ -917,7 +1007,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			mCenter.cGetGroupDevices(groupList2.get(i));
 		}
 	}
-	
+
+	//每一次获取组内子设备，都重新设置maplist,list
 	@Override
 	protected void didGetDevices(int error,
 			List<ConcurrentHashMap<String, String>> devicesList) {
@@ -1002,7 +1093,11 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	@Override
 	protected void didDisconnected(XPGWifiDevice device) {
-		super.didDisconnected(device);
+		Log.e(TAG, "disconnect");
+		if (!device.getDid().equalsIgnoreCase(mXpgWifiDevice.getDid()))
+			return;
+			
+		handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
 	}
 	
 	/**

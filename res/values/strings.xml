@@ -15,6 +15,7 @@
     <string name="dialog_btn_delete">删除</string>
     <string name="dialog_btn_cancel">取消</string>
     <string name="dialog_btn_confirm">确定</string>
+    <string name="dialog_disconnect">连接已断开</string>
     <string name="dialog_nonet_msg">手机还未连上Wi-Fi，请连接上您希望设备接入的Wi-Fi（如您家里的Wi-Fi），连接后请返回APP，将自动跳转到下一步</string>
     <string name="dialog_logout_msg">确定要注销，返回登陆界面吗？</string>
     <string name="dialog_delete_msg">是否删除：</string>

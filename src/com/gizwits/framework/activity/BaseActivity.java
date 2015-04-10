@@ -103,10 +103,14 @@ public class BaseActivity extends Activity {
 
 		public void didReceiveData(XPGWifiDevice device,
 				ConcurrentHashMap<String, Object> dataMap, int result) {
-
+            
 			BaseActivity.this.didSubReceiveData((XPGWifiSubDevice) device,
 					dataMap, result);
 
+		};
+		
+		public void didDisconnected(XPGWifiDevice device) {
+			BaseActivity.this.didDisconnected(device);
 		};
 
 	};

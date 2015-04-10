@@ -131,6 +131,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 	
+	//自动设置底部灯
 	private void setItemToSelectScroll(){
 		ll_select_led.removeAllViewsInLayout();
 		LinearLayout llview=new LinearLayout(EditGroupActivity.this);
@@ -189,10 +190,10 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 			if (groupIsExit) {
-				editGroupName();
+				editGroup();
 			}else{
 				for (int i = 0; i < grouplist.size(); i++) {
-					if (grouplist.get(i).groupName.equals(et_group_name.getText().toString())) {
+					if (grouplist.get(i).groupName.equals(et_group_name.getText().toString().trim())) {
 						Toast.makeText(this, "组名不可重复", Toast.LENGTH_SHORT).show();
 						return;
 					}
@@ -237,7 +238,8 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 //		}
 //	}
 	
-	private void editGroupName(){
+	//已有组，修改
+	private void editGroup(){
 		List<ConcurrentHashMap<String, String>> groupMaps = new ArrayList<ConcurrentHashMap<String,String>>();
 		for (int i = 0; i < selectLedList.size(); i++) {
 			ConcurrentHashMap<String, String> groupMap = new ConcurrentHashMap<String, String>();
@@ -248,6 +250,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		mCenter.cEditGroup(setmanager.getUid(), setmanager.getToken(), mXpgWifiGroup.gid, et_group_name.getText().toString(), groupMaps);
 	}
 
+	//保存新的分组
 	private void saveGroup() {
 		List<ConcurrentHashMap<String, String>> groupMaps = new ArrayList<ConcurrentHashMap<String,String>>();
 		for (int i = 0; i < selectLedList.size(); i++) {
