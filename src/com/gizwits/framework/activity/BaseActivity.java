@@ -38,6 +38,7 @@ import com.gizwits.framework.sdk.CmdCenter;
 import com.gizwits.framework.sdk.SettingManager;
 import com.gizwits.framework.utils.Historys;
 import com.gizwits.ledgateway.R;
+import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDeviceListener;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 import com.xtremeprog.xpgconnect.XPGWifiDeviceListener;
@@ -79,7 +80,7 @@ public class BaseActivity extends Activity {
 	public SettingManager setmanager;
 
 	/** 当前操作的设备 */
-	protected static XPGWifiDevice mXpgWifiDevice;
+	public static XPGWifiDevice mXpgWifiDevice;
 
 	/** The handler. */
 	private Handler handler = new Handler() {
@@ -99,19 +100,20 @@ public class BaseActivity extends Activity {
 		public void didDiscovered(int error,
 				List<XPGWifiSubDevice> subDeviceList) {
 			BaseActivity.this.didSubDiscovered(error, subDeviceList);
-		};
+		}
 
 		public void didReceiveData(XPGWifiDevice device,
 				ConcurrentHashMap<String, Object> dataMap, int result) {
-            
+            Log.e("123", "123");
 			BaseActivity.this.didSubReceiveData((XPGWifiSubDevice) device,
 					dataMap, result);
 
-		};
-		
+		}
+
+		@Override
 		public void didDisconnected(XPGWifiDevice device) {
 			BaseActivity.this.didDisconnected(device);
-		};
+		}
 
 	};
 

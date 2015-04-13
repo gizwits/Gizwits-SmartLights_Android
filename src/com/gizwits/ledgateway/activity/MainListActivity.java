@@ -238,9 +238,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		/** 接收到设备的数据 */
 		RECEIVED,
 
-		/** 获取设备状态 */
-		GET_STATUE,
-
 		/** The login start. */
 		LOGIN_START,
 
@@ -289,6 +286,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					e.printStackTrace();
 				}
 			case UPDATE_UI:
+				//状态置入本地LedList状态列表
 				for (int i = 0; i < ledList.size(); i++) {
 					try {
 						if (ledList.get(i).getSubDevice().getSubDid().equals(subDevice.getSubDid())) {
@@ -300,6 +298,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 						e.printStackTrace();
 					}
 				}
+				//*****************************改变组状态控制栏**************************************
 				boolean isOk = false;
 				if (selectGroup != "") {
 					for (int j = 0; j < groupMapList.get(selectGroup).size(); j++) {
@@ -319,6 +318,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 						}
 					}
 				}
+				//********************************************************************************
 				if (ivDels.size() > 0) {
 					ivDels.clear();
 				}
@@ -330,9 +330,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					DialogManager.showDialog(MainListActivity.this,
 							mDisconnectDialog);
 				}
-				break;
-			case GET_STATUE:
-//				mCenter.cGetStatus(mXpgWifiDevice);
 				break;
 			case LOGIN_SUCCESS:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
@@ -380,6 +377,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		super.onResume();
 		refreshMenu();
 		
+		//中控监听
 		Log.e("centralControlsetListener", "centralControlsetListener");
 		centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
 		centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
@@ -390,6 +388,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		
 		bottomClose();
 		
+		//展开3秒状态获取Loadding框
 		getStatusProgress.show();
 		final Timer timer=new Timer();
 		timer.schedule(new TimerTask() {
@@ -420,7 +419,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		//当前绑定列表没有当前操作设备
 		if(mAdapter.getChoosedPos()==-1){
 		mAdapter.setChoosedPos(0);
-		mXpgWifiDevice=mAdapter.getItem(0);
+		mXpgWifiDevice= mAdapter.getItem(0);
 		alarmList.clear();
 		}
 			
@@ -699,7 +698,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			intent.putStringArrayListExtra("ledList", GroupDevice.getAllName(ledList));
 			intent.putStringArrayListExtra("groupList", (ArrayList<String>) groupMapList.get(v.getTag().toString()));
 			intent.putExtra("groupName", v.getTag().toString());
-			intent.putExtra("did", ""+centralControlDevice.getDid());
+			intent.putExtra("did", ""+mXpgWifiDevice.getDid());
 			startActivity(intent);
 			break;
 		case R.id.black_alpha_bg:
@@ -951,6 +950,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 		for (int i = 0; i < subDeviceList.size(); i++) {
+			Log.e("123", "123");
 			subDeviceList.get(i).setListener(deviceListener);
 		}
 		getLedStatus();
@@ -1134,5 +1134,19 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 		handler.sendEmptyMessage(handler_key.UPDATE_UI.ordinal());
+	}
+	
+	@Override
+	protected void didDiscovered(int error, List<XPGWifiDevice> devicesList) {
+		// TODO Auto-generated method stub
+		super.didDiscovered(error, devicesList);
+		for (int i = 0; i < devicesList.size(); i++) {
+			if (devicesList.get(i).getDid().equals(mXpgWifiDevice.getDid())) {
+				mXpgWifiDevice = devicesList.get(i);
+				centralControlDevice = (XPGWifiCentralControlDevice) mXpgWifiDevice;
+				centralControlDevice.setListener(xpgWifiCentralControlDeviceListener);
+				return;
+			}
+		}
 	}
 }

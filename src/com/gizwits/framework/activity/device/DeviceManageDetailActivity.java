@@ -307,6 +307,12 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 	protected void didDiscovered(int error, List<XPGWifiDevice> deviceList) {
 		Log.d("onDiscovered", "Device count:" + deviceList.size());
 		deviceslist=deviceList;
+		for (int i = 0; i < deviceList.size(); i++) {
+			if (deviceList.get(i).getDid().equals(mXpgWifiDevice.getDid())) {
+				mXpgWifiDevice = deviceList.get(i);
+				return;
+			}
+		}
 		if(msg!=null)
 		{
 			handler.sendMessageDelayed(msg, 1500);

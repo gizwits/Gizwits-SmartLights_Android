@@ -35,27 +35,25 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 	private ImageView ivBack;
 	/** The ll scroll layout. */
 	private LinearLayout ll_scroll;
-	
+	/** The ll already select led */
 	private LinearLayout ll_select_led;
-	
+	/** The et Edit group name */
 	private EditText et_group_name;
-	
+	/** The iv Right confirm btn */
 	private ImageView ivConfirm;
-	
+	/** The exit led list */
 	private List<String> ledList = new ArrayList<String>();
-	
+	/** The already select led list */
 	private List<String> selectLedList = new ArrayList<String>();
-	
+	/** The group exit LedList */
 	private List<String> exitLedList = new ArrayList<String>();
-	
+	/** The exit group name */
 	private String groupName;
-	
+	/** The subLight base centerCtrl did */
 	private String did;
-
+	/** The select wifi Group */
 	private XPGWifiGroup mXpgWifiGroup;
-
-	private List<XPGWifiSubDevice> mSubDevicesList;
-	
+	/** The boolean group is Exit */
 	private boolean groupIsExit = false; 
 
 	@Override
@@ -72,6 +70,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		initEvent();
 		
 		groupIsExit = false;
+		//判断该分组是否已经存在，如果存在则放入组名，设置已选灯
 		if (exitLedList != null && exitLedList.size() != 0) {
 			groupIsExit = true;
 			groupName= getIntent().getStringExtra("groupName");
@@ -101,7 +100,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		ivConfirm.setOnClickListener(this);
 	}
 
-	// 设置滑动layout中子项
+	// 设置滑动layout中灯泡
 	private void setItemTollScroll() {
 		if (ledList.size() == 0) {
 			return;
@@ -131,7 +130,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 	
-	//自动设置底部灯
+	//设置已选择的灯
 	private void setItemToSelectScroll(){
 		ll_select_led.removeAllViewsInLayout();
 		LinearLayout llview=new LinearLayout(EditGroupActivity.this);
@@ -162,6 +161,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
             llview.addView(textview); 
             
             if (selectLedList.size() % 4 > 0 && i == selectLedList.size() - 1) {
+            	//如果最后一组小于4个灯，则放入隐藏的tv
             	for (int j = 0; j <= (4 - (selectLedList.size() % 4) - 1); j++) {
 					TextView textviews=new TextView(this);
 		            textviews.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
