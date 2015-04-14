@@ -319,10 +319,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					}
 				}
 				//********************************************************************************
-				if (ivDels.size() > 0) {
-					ivDels.clear();
-				}
-				mGroupAdapter.notifyDataSetChanged();
+				myGroupAdapterNotify();
 				break;
 			case DISCONNECTED:
 				Log.e(TAG, "disconnnect");
@@ -337,7 +334,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				if (mView.isOpen()) {
 					mView.toggle();
 				}
-				mCenter.cGetStatus(mXpgWifiDevice);
+				onResume();
 				break;
 			case LOGIN_FAIL:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
@@ -387,6 +384,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);//获取组
 		
 		bottomClose();
+		
+		showItemDevices.clear();
 		
 		//展开3秒状态获取Loadding框
 		getStatusProgress.show();
@@ -454,14 +453,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		alarmList = new ArrayList<DeviceAlarm>();
 		alarmShowList = new ArrayList<String>();
 		//the normal data
-		mapList.put("light", ledList);
-		mapList.put("我的LED", ledList);
-		mapList.put("group", ledList);
-		mapList.put("addGroup", ledList);
-		list.add("light");
-		list.add("我的LED");
-		list.add("group");
-		list.add("addGroup");
+		listViewSetNormal();
+		
 		mGroupAdapter = new GroupAdapter(this, mapList, list);
 		sclContent.setAdapter(mGroupAdapter);
 
@@ -680,18 +673,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					mCenter.cSwitchOn(selectSubDevice, true);
 				}
 			}
-			
-//			final Timer timer=new Timer();
-//			timer.schedule(new TimerTask() {
-//				
-//				@Override
-//				public void run() {
-//					// TODO Auto-generated method stub
-//					getLedStatus();
-//					timer.cancel();
-//				}
-//			}, 2000);
-//			getLedStatus();
 			break;
 		case R.id.edit_group:
 			Intent intent = new Intent(MainListActivity.this, EditGroupActivity.class);
@@ -856,13 +837,75 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			handler.sendMessage(msg);
 		}
 	}
+
+	/**
+	 * 设置灯数据,每一次获取子设备，都重新设置maplist,list
+	 * @param subDeviceList 如为空则不重置ledList
+	 */
+	public void putStatusToViewList(List<XPGWifiSubDevice> subDeviceList){
+		list.clear();
+		mapList.clear();
+		
+		mapList.put("light", ledList);
+		list.add("light");
+		
+		if (subDeviceList != null) {
+			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
+		}
+		mapList.put("我的LED", ledList);
+		list.add("我的LED");
+		
+		mapList.put("group", ledList);
+		list.add("group");
+		
+		for (int i = 0; i < grouplist.size(); i++) {
+			list.add(grouplist.get(i).groupName);
+			List<GroupDevice> gDevices = new ArrayList<GroupDevice>();
+			for (int j = 0; j < groupMapList.get(grouplist.get(i).groupName).size(); j++) {
+				GroupDevice gDevice = new GroupDevice();
+				gDevice.setSdid(Integer.parseInt(groupMapList.get(grouplist.get(i).groupName).get(j)));
+				gDevices.add(gDevice);
+			}
+			mapList.put(grouplist.get(i).groupName, gDevices);
+		}
+		
+		mapList.put("addGroup", ledList);
+		list.add("addGroup");
+		
+	}
 	
-//	public boolean checkDeviceExit(List<XPGWifiSubDevice> devices){
-//		if (devices == null) {
-//			return true;
-//		}
-//		return ledList.size() == devices.size();
-//	}
+	/**
+	 * 重置ListView数据
+	 */
+	public void listViewSetNormal(){
+		list.clear();
+		mapList.clear();
+		mapList.put("light", ledList);
+		list.add("light");
+		mapList.put("我的LED", ledList);
+		list.add("我的LED");
+		mapList.put("group", ledList);
+		list.add("group");
+		mapList.put("addGroup", ledList);
+		list.add("addGroup");
+	}
+	
+	/**
+	 * 更新Adapter状态
+	 */
+	public void myGroupAdapterNotify(){
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (ivDels.size() > 0) {
+					ivDels.clear();
+				}
+				mGroupAdapter.notifyDataSetChanged();
+			}
+		});
+	}
 
 	/**
 	 * 检查出了选中device，其他device有没有连接上
@@ -900,57 +943,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		
 	}
 	
-	//每一次获取子设备，都重新设置ledList,maplist,list
 	@Override
 	protected void didSubDiscovered(int error,
 			List<XPGWifiSubDevice> subDeviceList) {
 		// TODO Auto-generated method stub
 		super.didSubDiscovered(error, subDeviceList);
 		Log.e(TAG, "getSubDevices size : "+subDeviceList.size());
-		list.clear();
-		mapList.clear();
 		
-		mapList.put("light", ledList);
-		list.add("light");
+		putStatusToViewList(subDeviceList);
 		
-//		Log.e("1", "1");
-//		if (!checkDeviceExit(subDeviceList)) {
-			Log.e("getdeviceExit", "getdeviceExit");
-			ledList = GroupDevice.getGroupDeviceByList(subDeviceList);
-//		}
-//		Log.e("2", "2");
-		mapList.put("我的LED", ledList);
-		list.add("我的LED");
+		myGroupAdapterNotify();
 		
-		mapList.put("group", ledList);
-		list.add("group");
-		
-		for (int i = 0; i < grouplist.size(); i++) {
-			list.add(grouplist.get(i).groupName);
-			List<GroupDevice> gDevices = new ArrayList<GroupDevice>();
-			for (int j = 0; j < groupMapList.get(grouplist.get(i).groupName).size(); j++) {
-				GroupDevice gDevice = new GroupDevice();
-				gDevice.setSdid(Integer.parseInt(groupMapList.get(grouplist.get(i).groupName).get(j)));
-				gDevices.add(gDevice);
-			}
-			mapList.put(grouplist.get(i).groupName, gDevices);
-		}
-		
-		mapList.put("addGroup", ledList);
-		list.add("addGroup");
-		runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				if (ivDels.size() > 0) {
-					ivDels.clear();
-				}
-				mGroupAdapter.notifyDataSetChanged();
-			}
-		});
 		for (int i = 0; i < subDeviceList.size(); i++) {
-			Log.e("123", "123");
 			subDeviceList.get(i).setListener(deviceListener);
 		}
 		getLedStatus();
@@ -965,29 +969,11 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 		if (groupList2.size() == 0) {
-			list.clear();
-			mapList.clear();
-			mapList.put("light", ledList);
-			list.add("light");
-			mapList.put("我的LED", ledList);
-			list.add("我的LED");
-			mapList.put("group", ledList);
-			list.add("group");
-			mapList.put("addGroup", ledList);
-			list.add("addGroup");
+			listViewSetNormal();
 
 			grouplist.clear();
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					if (ivDels.size() > 0) {
-						ivDels.clear();
-					}
-					mGroupAdapter.notifyDataSetChanged();
-				}
-			});
+			
+			myGroupAdapterNotify();
 			return;
 		}
 		if (!selectGroup.equals("") && selectGroup != null) {
@@ -1024,42 +1010,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		}
 		groupMapList.put(grouplist.get(grouplist.size()-1).groupName, strings);
 		
-		list.clear();
-		mapList.clear();
+		putStatusToViewList(null);
 		
-		mapList.put("light", ledList);
-		list.add("light");
-		
-		mapList.put("我的LED", ledList);
-		list.add("我的LED");
-		
-		mapList.put("group", ledList);
-		list.add("group");
-		
-		for (int i = 0; i < grouplist.size(); i++) {
-			list.add(grouplist.get(i).groupName);
-			List<GroupDevice> gDevices = new ArrayList<GroupDevice>();
-			for (int j = 0; j < groupMapList.get(grouplist.get(i).groupName).size(); j++) {
-				GroupDevice gDevice = new GroupDevice();
-				gDevice.setSdid(Integer.parseInt(groupMapList.get(grouplist.get(i).groupName).get(j)));
-				gDevices.add(gDevice);
-			}
-			mapList.put(grouplist.get(i).groupName, gDevices);
-		}
-		
-		mapList.put("addGroup", ledList);
-		list.add("addGroup");
-		runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				if (ivDels.size() > 0) {
-					ivDels.clear();
-				}
-				mGroupAdapter.notifyDataSetChanged();
-			}
-		});
+		myGroupAdapterNotify();
 	}
 
 	/*
@@ -1136,6 +1089,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		handler.sendEmptyMessage(handler_key.UPDATE_UI.ordinal());
 	}
 	
+	//出现discovered后，重置存储中匹配的mXpgWifiDevice，重新设置Listener
 	@Override
 	protected void didDiscovered(int error, List<XPGWifiDevice> devicesList) {
 		// TODO Auto-generated method stub

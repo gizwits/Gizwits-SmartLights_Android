@@ -284,6 +284,10 @@ public class GroupAdapter extends BaseAdapter {
             //***********************************************************************************
 		}       
         listItemView.ll_item_bottom.setTag(llviews);//将需要展开的llview，保存于Tag中，方便获取
+        ImageView iv_bottom = (ImageView) listItemView.ll_item_bottom.findViewById(R.id.item_bottom);
+        if (mainListActivity.showItemDevices.contains(list.get(position))) {
+        	iv_bottom.setImageResource(R.drawable.icon_close);
+		}
         listItemView.ll_item_bottom.setOnClickListener(showItemClick);
         return convertView;     
     }

@@ -110,6 +110,9 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 		
 		/** 获取绑定列表 */
 		GET_BOUND,
+		
+		/** 超时 */
+		TIMEOUT,
 
 	}
 
@@ -142,8 +145,13 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 
 			case DELETE_FAIL:
 				DialogManager.dismissDialog(DeviceManageDetailActivity.this, progressDialog);
-				ToastUtils.showShort(DeviceManageDetailActivity.this, "删除失败:"
+				ToastUtils.showShort(DeviceManageDetailActivity.this, "删除失败！"
 						+ msg.obj.toString());
+				break;
+				
+			case TIMEOUT:
+				DialogManager.dismissDialog(DeviceManageDetailActivity.this, progressDialog);
+				ToastUtils.showShort(DeviceManageDetailActivity.this, "超时");
 				break;
 				
 			case GET_BOUND:
@@ -245,6 +253,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 				mCenter.cUpdateRemark(setmanager.getUid(), setmanager
 						.getToken(), xpgWifiDevice.getDid(), xpgWifiDevice
 						.getPasscode(), etName.getText().toString());
+				handler.sendEmptyMessageDelayed(handler_key.TIMEOUT.ordinal(), 8000);
 			} else {
 				ToastUtils.showShort(DeviceManageDetailActivity.this,
 						"请输入一个设备名称");
@@ -256,6 +265,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 			DialogManager.showDialog(this, progressDialog);
 			mCenter.cUnbindDevice(setmanager.getUid(), setmanager.getToken(),
 					xpgWifiDevice.getDid(), xpgWifiDevice.getPasscode());
+			handler.sendEmptyMessageDelayed(handler_key.TIMEOUT.ordinal(), 8000);
 			break;
 		}
 
@@ -276,6 +286,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 	protected void didBindDevice(int error, String errorMessage, String did) {
 		Log.d("Device扫描结果", "error=" + error + ";errorMessage=" + errorMessage
 				+ ";did=" + did);
+		handler.removeMessages(handler_key.TIMEOUT.ordinal());
 		if (error == 0) {
 			msg.what=handler_key.CHANGE_SUCCESS.ordinal();
 			handler.sendEmptyMessage(handler_key.GET_BOUND.ordinal());
@@ -292,6 +303,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 	 */
 	@Override
 	protected void didUnbindDevice(int error, String errorMessage, String did) {
+		handler.removeMessages(handler_key.TIMEOUT.ordinal());
 		if (error == 0) {
 			msg.what=handler_key.DELETE_SUCCESS.ordinal();
 			handler.sendEmptyMessage(handler_key.GET_BOUND.ordinal());
