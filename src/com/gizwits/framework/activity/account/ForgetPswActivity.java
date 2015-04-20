@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.widget.MyInputFilter;
 import com.xpg.common.useful.StringUtils;

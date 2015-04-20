@@ -41,7 +41,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.activity.device.DeviceListActivity;
 import com.google.zxing.Result;

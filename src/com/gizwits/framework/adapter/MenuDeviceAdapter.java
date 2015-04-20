@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.utils.DensityUtil;
 import com.gizwits.framework.utils.StringUtils;
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 /**

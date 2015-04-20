@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.framework.utils.StringUtils;

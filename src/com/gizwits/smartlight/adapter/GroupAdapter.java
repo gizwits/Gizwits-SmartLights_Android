@@ -1,4 +1,4 @@
-package  com.gizwits.ledgateway.adapter;   
+package  com.gizwits.smartlight.adapter;   
   
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,9 @@ import android.widget.Toast;
 import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.entity.GroupDevice;
 import com.gizwits.framework.utils.DialogManager;
-import com.gizwits.ledgateway.R;
-import com.gizwits.ledgateway.activity.AddSubDeviceActivity;
-import com.gizwits.ledgateway.activity.MainListActivity;
+import com.gizwits.smartlight.R;
+import com.gizwits.smartlight.activity.AddSubDeviceActivity;
+import com.gizwits.smartlight.activity.MainListActivity;
 import com.xpg.common.device.DensityUtils;
 import com.xtremeprog.xpgconnect.XPGWifiGroup;
 import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
@@ -161,7 +161,7 @@ public class GroupAdapter extends BaseAdapter {
 				}
         		listItemView.ll_item.addView(llview);//将设置灯的LinearLayout放入Item
 			}
-        	FrameLayout flayout=new FrameLayout(mainListActivity);//每一个Led
+        	FrameLayout flayout=new FrameLayout(mainListActivity);//每一个LedFlayout
         	flayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
              
             if (list.get(position).equals("我的LED")) {
@@ -171,7 +171,7 @@ public class GroupAdapter extends BaseAdapter {
 	            		//若该Led灯被选中则设置绿边图片，与底部案件状态一同修改
 						if (mainListActivity.selecttv.getText().equals("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid())) {
 							mainListActivity.switchOn();
-							mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
+							mainListActivity.sbLightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
 							mainListActivity.selecttv=getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.yLightSelect, 
 		                    		true, mapList.get(list.get(position)).get(i));
 							flayout.addView(mainListActivity.selecttv);
@@ -187,7 +187,7 @@ public class GroupAdapter extends BaseAdapter {
 					if (mainListActivity.selecttv != null) {
 						if (mainListActivity.selecttv.getText().equals("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid())) {
 				            mainListActivity.switchOff();
-				            mainListActivity.lightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
+				            mainListActivity.sbLightness.setProgress(mapList.get(list.get(position)).get(i).getLightness());
 				            mainListActivity.selecttv=getLedView("灯"+mapList.get(list.get(position)).get(i).getSubDevice().getSubDid(), mainListActivity.wLightSelect, 
 		                    		true, mapList.get(list.get(position)).get(i));
 				            flayout.addView(mainListActivity.selecttv);
@@ -405,9 +405,9 @@ public class GroupAdapter extends BaseAdapter {
 			}else{
 				mainListActivity.switchOn();
 			}
-            mainListActivity.edit_group.setVisibility(View.INVISIBLE);
-            mainListActivity.light_name.setText(mainListActivity.selecttv.getText().toString());
-            mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
+            mainListActivity.etGroup.setVisibility(View.INVISIBLE);
+            mainListActivity.tvLName.setText(mainListActivity.selecttv.getText().toString());
+            mainListActivity.sbLightness.setProgress(gSelectDevice.getLightness());
             mainListActivity.bottomShow();
 		}
 	};
@@ -435,10 +435,10 @@ public class GroupAdapter extends BaseAdapter {
 						}else{
 							mainListActivity.switchOff();
 						}
-			            mainListActivity.light_name.setText(groupName);
-			            mainListActivity.edit_group.setVisibility(View.VISIBLE);
-			            mainListActivity.edit_group.setTag(groupName);
-			            mainListActivity.lightness.setProgress(gSelectDevice.getLightness());
+			            mainListActivity.tvLName.setText(groupName);
+			            mainListActivity.etGroup.setVisibility(View.VISIBLE);
+			            mainListActivity.etGroup.setTag(groupName);
+			            mainListActivity.sbLightness.setProgress(gSelectDevice.getLightness());
 						isShowOk = true;
 						break;
 					}

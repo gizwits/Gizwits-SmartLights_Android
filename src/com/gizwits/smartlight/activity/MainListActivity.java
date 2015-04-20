@@ -18,7 +18,7 @@ lampY_frameY.png * Project Name:XPGSdkV4AppBase
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.gizwits.ledgateway.activity;
+package com.gizwits.smartlight.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,8 +71,8 @@ import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.framework.widget.RefreshableListView;
 import com.gizwits.framework.widget.RefreshableListView.OnRefreshListener;
 import com.gizwits.framework.widget.SlidingMenu;
-import com.gizwits.ledgateway.R;
-import com.gizwits.ledgateway.adapter.GroupAdapter;
+import com.gizwits.smartlight.R;
+import com.gizwits.smartlight.adapter.GroupAdapter;
 import com.xpg.common.system.IntentUtils;
 import com.xpg.ui.utils.ToastUtils;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
@@ -100,9 +100,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The m view. */
 	private SlidingMenu mView;
 
-	/** The rl alarm tips. */
-	private RelativeLayout rlAlarmTips;
-	
 	/** the btn alpha bg */
 	private Button alpha_bg;
 	
@@ -120,24 +117,18 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 
 	/** The tv title. */
 	private TextView tvTitle;
-
-	/** The iv back. */
-	private ImageView ivBack;
-
-	/** the ListView deviceListview */
-	private ListView listview;
 	
 	/** the TextVIew light_name */
-	public TextView light_name;
+	public TextView tvLName;
 	
 	/** the iv bottom edit_group Btn*/
-	public ImageView edit_group;
+	public ImageView etGroup;
 	
 	/** the TextView turn on off */
 	private TextView btnSwitch;
 	
 	/** the sb light adjust */
-	public SeekBar lightness;
+	public SeekBar sbLightness;
 
 	/** The m adapter. */
 	private MenuDeviceAdapter mAdapter;
@@ -154,12 +145,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The statu map. */
 	private Map<String, Object> statuMap;
 
-	/** The alarm list. */
-	private ArrayList<DeviceAlarm> alarmList;
-
-	/** The alarm list has shown. */
-	private ArrayList<String> alarmShowList;
-
 	/** The progress dialog. */
 	private ProgressDialog progressDialog;
 	
@@ -169,13 +154,17 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** The XPGWifiCentralControlDevice centralControlDevice */
 	public XPGWifiCentralControlDevice centralControlDevice;
 	
-	/** the list device */
+	/** the list device 
+	 *  the key listitem name
+	 *  the value listitem contains ledlist sdid */
 	public Map<String, List<GroupDevice>> mapList=new HashMap<String, List<GroupDevice>>();
-	/** the list groupList */
+	/** the list groupList 
+	 * 	the key group name
+	 *  the value group contains ledlist sdid */
 	public Map<String, List<String>> groupMapList = new HashMap<String, List<String>>();
 	/** the list ledList */
 	public List<GroupDevice> ledList = new ArrayList<GroupDevice>();
-	/** the list item_name_list */
+	/** the listview item namelist */
 	public List<String> list = new ArrayList<String>();
 	/** the list Delete Btn list */
 	public List<ImageView> ivDels = new ArrayList<ImageView>();
@@ -207,6 +196,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** the XPGWifiSubDevice selcetSubDevice */
 	public XPGWifiSubDevice selectSubDevice;
 	
+	/** the String select group name */
 	public String selectGroup = "";
 	
 	/** the device select show Item */
@@ -215,6 +205,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	/** 是否超时标志位 */
 	private boolean isTimeOut = false;
 	
+	/** 底部控制延时 */
 	private long switchTime = 0;
 
 	/**
@@ -416,9 +407,8 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		
 		//当前绑定列表没有当前操作设备
 		if(mAdapter.getChoosedPos()==-1){
-		mAdapter.setChoosedPos(0);
-		mXpgWifiDevice= mAdapter.getItem(0);
-		alarmList.clear();
+			mAdapter.setChoosedPos(0);
+			mXpgWifiDevice= mAdapter.getItem(0);
 		}
 			
 		mAdapter.notifyDataSetChanged();
@@ -449,8 +439,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		add.setBounds(0, 0, add.getMinimumWidth(), add.getMinimumHeight());
 		
 		statuMap = new ConcurrentHashMap<String, Object>();
-		alarmList = new ArrayList<DeviceAlarm>();
-		alarmShowList = new ArrayList<String>();
 		//the normal data
 		listViewSetNormal();
 		
@@ -480,22 +468,21 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void initViews() {
 		mView = (SlidingMenu) findViewById(R.id.main_layout);
-		// rlHeader = (RelativeLayout) findViewById(R.id.rlHeader);
-		rlAlarmTips = (RelativeLayout) findViewById(R.id.rlAlarmTips);
+		
 		llFooter = (LinearLayout) findViewById(R.id.llFooter);
 		alpha_bg = (Button) findViewById(R.id.black_alpha_bg);
-		light_name = (TextView) findViewById(R.id.show_led_name);
-		edit_group = (ImageView) findViewById(R.id.edit_group);
+		tvLName = (TextView) findViewById(R.id.show_led_name);
+		etGroup = (ImageView) findViewById(R.id.edit_group);
 		llBottom = (LinearLayout) findViewById(R.id.llBottom);
 		ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
 		ivEdit = (ImageView) findViewById(R.id.ivEdit);
 		ivEdit.setTag(1);
-//		ivBack = (ImageView) findViewById(R.id.ivBack);
+
 		sclContent = (RefreshableListView) findViewById(R.id.sclContent);
 
 		btnSwitch = (TextView) findViewById(R.id.btnSwitch);
-		lightness = (SeekBar) findViewById(R.id.sbLightness);
+		sbLightness = (SeekBar) findViewById(R.id.sbLightness);
 
 		mAdapter = new MenuDeviceAdapter(this, bindlist);
 		lvDevice = (ListView) findViewById(R.id.lvDevice);
@@ -511,10 +498,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void initEvents() {
 		ivMenu.setOnClickListener(this);
-		rlAlarmTips.setOnClickListener(this);
 		tvTitle.setOnClickListener(this);
 		llFooter.setOnClickListener(this);
-		edit_group.setOnClickListener(this);
+		etGroup.setOnClickListener(this);
 
 		lvDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -533,23 +519,23 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				loginDevice(mXpgWifiDevice);
 			}
 		});
-		lightness.setOnTouchListener(new OnTouchListener() {
+		sbLightness.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					lightness.getParent().requestDisallowInterceptTouchEvent(true);
+					sbLightness.getParent().requestDisallowInterceptTouchEvent(true);
 					break;
 				case MotionEvent.ACTION_CANCEL:
-					lightness.getParent().requestDisallowInterceptTouchEvent(false);
+					sbLightness.getParent().requestDisallowInterceptTouchEvent(false);
 					break;
 				}
 				return false;
 			}
 		});
-		lightness.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+		sbLightness.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -637,21 +623,14 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		case R.id.ivMenu:
 			mView.toggle();
 			break;
-		case R.id.rlAlarmTips:
-		case R.id.tvTitle:
-			if (alarmList != null && alarmList.size() > 0) {
-				// Intent intent = new Intent(MainListActivity.this,
-				// AlarmListActicity.class);
-				// intent.putExtra("alarm_list", alarmList);
-				// startActivity(intent);
-			}
-			break;
 		case R.id.btnSwitch:
+			//每0.6秒智能操控一次，避免频繁操控
 			if (switchTime + 600 > System.currentTimeMillis()) {
 				return;
 			}
 			switchTime = System.currentTimeMillis();
 			if (!selectGroup.equals("") && selectGroup != null) {
+				//获取ledList中存在组的设备进行控制
 				for (int i = 0; i < groupMapList.get(selectGroup).size(); i++) {
 					for (int j = 0; j < ledList.size(); j++) {
 						if (ledList.get(j).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(i))) {
@@ -666,6 +645,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					}
 				}
 			}else {
+				//单设备控制
 				if (btnSwitch.getText().toString().equals("关灯")) {
 					mCenter.cSwitchOn(selectSubDevice, false);
 				}else{
@@ -674,6 +654,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.edit_group:
+			//底部菜单组编辑按钮
 			Intent intent = new Intent(MainListActivity.this, EditGroupActivity.class);
 			intent.putStringArrayListExtra("ledList", GroupDevice.getAllName(ledList));
 			intent.putStringArrayListExtra("groupList", (ArrayList<String>) groupMapList.get(v.getTag().toString()));
@@ -685,6 +666,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			bottomClose();
 			break;
 		case R.id.ivEdit:
+			//右上角编辑按钮，点开展示所有删除按钮
 			Log.e("showDel", ""+ivDels.size());
 			bottomClose();
 			
@@ -985,7 +967,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		grouplist.clear();
 		for (int i = 0; i < groupList2.size(); i++) {
 			if (!gid.equals("") && gid.equals(groupList2.get(i).gid)) {
-				light_name.setText(groupList2.get(i).groupName);
+				tvLName.setText(groupList2.get(i).groupName);
 			}
 			grouplist.add(groupList2.get(i));
 			groupList2.get(i).setListener(xpgWifiGroupListener);

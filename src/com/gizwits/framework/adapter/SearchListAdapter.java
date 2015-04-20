@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.gizwits.framework.sdk.SettingManager;
 import com.gizwits.framework.utils.StringUtils;
 import com.xtremeprog.xpgconnect.XPGWifiDevice;

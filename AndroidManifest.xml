@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gizwits.ledgateway"
+    package="com.gizwits.smartlight"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -84,15 +84,13 @@
             android:name="zxing.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name="com.gizwits.centercontrolled.activity.slipbar.SlipBarActivity" 
-            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.gizwits.ledgateway.activity.MainListActivity"
+            android:name="com.gizwits.smartlight.activity.MainListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
-        <activity android:name="com.gizwits.ledgateway.activity.AddSubDeviceActivity" 
+        <activity android:name="com.gizwits.smartlight.activity.AddSubDeviceActivity" 
             android:screenOrientation="portrait"/>
-        <activity android:name="com.gizwits.ledgateway.activity.EditGroupActivity" 
+        <activity android:name="com.gizwits.smartlight.activity.EditGroupActivity" 
             android:screenOrientation="portrait"/>
     </application>
 

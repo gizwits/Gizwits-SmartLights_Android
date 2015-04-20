@@ -1,4 +1,4 @@
-package com.gizwits.ledgateway.activity;
+package com.gizwits.smartlight.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.gizwits.framework.activity.BaseActivity;
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
 
 public class AddSubDeviceActivity extends BaseActivity implements OnClickListener{

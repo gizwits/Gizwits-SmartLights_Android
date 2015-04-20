@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.gizwits.framework.widget.ArrayWheelAdapter;
 import com.gizwits.framework.widget.WheelView;
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.google.zxing.Result;
 
 /**

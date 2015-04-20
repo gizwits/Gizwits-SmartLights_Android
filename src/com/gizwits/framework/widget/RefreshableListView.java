@@ -36,7 +36,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 
 // TODO: Auto-generated Javadoc
 /**

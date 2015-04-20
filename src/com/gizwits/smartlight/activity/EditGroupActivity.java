@@ -1,4 +1,4 @@
-package com.gizwits.ledgateway.activity;
+package com.gizwits.smartlight.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.gizwits.framework.activity.BaseActivity;
 import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.entity.GroupDevice;
-import com.gizwits.ledgateway.R;
+import com.gizwits.smartlight.R;
 import com.xpg.common.device.DensityUtils;
 import com.xtremeprog.xpgconnect.XPGWifiGroup;
 import com.xtremeprog.xpgconnect.XPGWifiSubDevice;
