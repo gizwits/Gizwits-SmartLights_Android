@@ -94,6 +94,7 @@
     <string name="search_device_tips1">你的网络中还没有已配置的设备,如已经配置过,\n请确认手机正连接着与设备相同的wifi.</string>
 	<string name="search_device_configure_qr_code">二维码扫描添加虚拟设备</string>
 	<string name="search_device_configure">我要配置gokit</string>
+	<string name="search_centerctrl_configure">我要配置中控</string>
 	<string name="account_manage">账号管理</string>
 	<string name="about">关于</string>
 	<string name="back_to_device_list">返回设备列表</string>

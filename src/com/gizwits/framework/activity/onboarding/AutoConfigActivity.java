@@ -35,10 +35,13 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.gizwits.ledgateway.R;
 import com.gizwits.framework.activity.BaseActivity;
+import com.gizwits.framework.activity.device.DeviceListActivity;
+import com.xpg.common.system.IntentUtils;
 import com.xpg.common.useful.NetworkUtils;
 import com.xpg.common.useful.StringUtils;
 import com.xpg.ui.utils.ToastUtils;
@@ -110,7 +113,7 @@ public class AutoConfigActivity extends BaseActivity implements OnClickListener 
 			switch (key) {
 			case CHANGE_WIFI:
 				strSsid = NetworkUtils
-						.getCurentWifiSSID(AutoConfigActivity.this);
+						.getCurentSSID(AutoConfigActivity.this);
 				tvSsid.setText(getString(R.string.wifi_name) + strSsid);
 				break;
 
@@ -213,6 +216,10 @@ public class AutoConfigActivity extends BaseActivity implements OnClickListener 
 		registerReceiver(mChangeBroadcast, filter);
 		if (NetworkUtils.isWifiConnected(this)) {
 			handler.sendEmptyMessage(handler_key.CHANGE_WIFI.ordinal());
+		}else{
+			ToastUtils.showShort(this, "Wifi未连接");
+			IntentUtils.getInstance().startActivity(AutoConfigActivity.this,
+					SearchDeviceActivity.class);
 		}
 	}
 
@@ -248,6 +255,9 @@ public class AutoConfigActivity extends BaseActivity implements OnClickListener 
 			Log.i("networkchange", "change" + iswifi);
 			if (iswifi) {
 				handler.sendEmptyMessage(handler_key.CHANGE_WIFI.ordinal());
+			}else{
+				ToastUtils.showShort(AutoConfigActivity.this, "Wifi未连接");
+				onBackPressed();
 			}
 		}
 	}

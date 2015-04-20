@@ -17,6 +17,8 @@
  */
 package com.gizwits.framework.activity.account;
 
+import java.util.List;
+
 import android.app.ProgressDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -36,6 +38,8 @@ import com.gizwits.framework.activity.device.DeviceListActivity;
 import com.xpg.common.system.IntentUtils;
 import com.xpg.common.useful.NetworkUtils;
 import com.xpg.common.useful.StringUtils;
+import com.xtremeprog.xpgconnect.XPGWifiCentralControlDevice;
+import com.xtremeprog.xpgconnect.XPGWifiDevice;
 
 // TODO: Auto-generated Javadoc
 
@@ -110,7 +114,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
 				Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT)
 						.show();
-				dialog.cancel();
+				if (dialog != null && dialog.isShowing()) {
+					dialog.cancel();
+				}
 				IntentUtils.getInstance().startActivity(LoginActivity.this,
 						DeviceListActivity.class);
 				finish();
@@ -120,14 +126,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
 				Toast.makeText(LoginActivity.this, msg.obj + "",
 						Toast.LENGTH_SHORT).show();
-				dialog.cancel();
+				if (dialog != null && dialog.isShowing()) {
+					dialog.cancel();
+				}
 				break;
 			// 登录超时
 			case LOGIN_TIMEOUT:
-				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
 				Toast.makeText(LoginActivity.this, "登陆超时", Toast.LENGTH_SHORT)
 						.show();
-				dialog.cancel();
+				if (dialog != null && dialog.isShowing()) {
+					dialog.cancel();
+				}
 				break;
 
 			}

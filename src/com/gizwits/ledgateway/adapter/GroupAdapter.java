@@ -473,7 +473,7 @@ public class GroupAdapter extends BaseAdapter {
 	};
 	
 	/**
-	 * 获取自动生成的Add按钮&充当占位按钮
+	 * 生成Add按钮&充当占位按钮
 	 * @param visible view是否可见
 	 * @return
 	 */

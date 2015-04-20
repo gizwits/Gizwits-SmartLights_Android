@@ -124,7 +124,7 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 			}
             textview.setOnClickListener(ledClick);
             if (i > 0) {
-                textview.setPadding(45, 0, 0, 0);
+                textview.setPadding(18, 0, 0, 0);
 			}
             ll_scroll.addView(textview); 
 		}
@@ -190,6 +190,12 @@ public class EditGroupActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 			if (groupIsExit) {
+				for (int i = 0; i < grouplist.size(); i++) {
+					if (grouplist.get(i).groupName.equals(et_group_name.getText().toString().trim()) && !et_group_name.getText().toString().trim().equals(groupName)) {
+						Toast.makeText(this, "组名不可重复", Toast.LENGTH_SHORT).show();
+						return;
+					}
+				}
 				editGroup();
 			}else{
 				for (int i = 0; i < grouplist.size(); i++) {

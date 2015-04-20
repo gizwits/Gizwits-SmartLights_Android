@@ -84,7 +84,7 @@ public class RefreshableListView extends ListView {
 	private boolean mArrowUp = false;
 	
 	/** The m is refreshing. */
-	private boolean mIsRefreshing = false;
+	public boolean mIsRefreshing = false;
 	
 	/** The m header height. */
 	private int mHeaderHeight = 0;

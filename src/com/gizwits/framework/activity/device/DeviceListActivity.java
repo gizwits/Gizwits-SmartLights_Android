@@ -19,6 +19,8 @@ package com.gizwits.framework.activity.device;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -89,7 +91,7 @@ public class DeviceListActivity extends BaseActivity implements
 	private Dialog dialog;
 	
 	/** 登陆设备超时时间 */
-	private int LoginDeviceTimeOut = 60000;
+	private int LoginDeviceTimeOut = 15000;
 
 	/** 网络状态广播接受器. */
 	private ConnecteChangeBroadcast mChangeBroadcast = new ConnecteChangeBroadcast();
@@ -133,6 +135,11 @@ public class DeviceListActivity extends BaseActivity implements
 		 * Exit the app.
 		 */
 		EXIT,
+		
+		/**
+		 * found time out.
+		 */
+		FOUND_TIMEOUT,
 
 	}
 
@@ -147,13 +154,16 @@ public class DeviceListActivity extends BaseActivity implements
 			case FOUND:
 				lvDevices.completeRefreshing();
 				break;
-
+			case FOUND_TIMEOUT:
+				if (lvDevices.mIsRefreshing) {
+					lvDevices.completeRefreshing();
+				}
+				break;
 			case LOGIN_SUCCESS:
 				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
 				IntentUtils.getInstance().startActivity(
 						DeviceListActivity.this, MainListActivity.class);
 				break;
-
 			case LOGIN_FAIL:
 				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
 				ToastUtils.showShort(DeviceListActivity.this, "连接失败");
@@ -238,7 +248,8 @@ public class DeviceListActivity extends BaseActivity implements
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				getList();
-
+				
+				handler.sendEmptyMessageDelayed(handler_key.FOUND_TIMEOUT.ordinal(), 10000);
 			}
 		});
 		progressDialog = new ProgressDialog(this);

@@ -323,10 +323,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				break;
 			case DISCONNECTED:
 				Log.e(TAG, "disconnnect");
-				if (!mView.isOpen()) {
-					DialogManager.showDialog(MainListActivity.this,
-							mDisconnectDialog);
-				}
+				DialogManager.showDialog(MainListActivity.this, mDisconnectDialog);
 				break;
 			case LOGIN_SUCCESS:
 				handler.removeMessages(handler_key.LOGIN_TIMEOUT.ordinal());
@@ -341,7 +338,9 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
 				break;
 			case LOGIN_TIMEOUT:
+				Log.e(TAG, "timeout");
 				isTimeOut = true;
+				progressDialog.cancel();
 				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
 				break;
 			}
@@ -1022,10 +1021,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 	 */
 	@Override
 	public void onBackPressed() {
-		if (llBottom.getVisibility() == View.VISIBLE) {
-			bottomClose();
-			return;
-		}
+		bottomClose();
 		if (mView.isOpen()) {
 			mView.toggle();
 		} else {

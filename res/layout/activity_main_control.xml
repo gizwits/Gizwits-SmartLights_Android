@@ -191,6 +191,8 @@
 					            android:layout_height="wrap_content"
 					            android:layout_toLeftOf="@+id/j"
                                 android:layout_toRightOf="@+id/i"
+                                android:progressDrawable="@drawable/main_seekbar"
+                                android:thumb="@drawable/hua_thumb"
 					            android:max="255"/>
                             <ImageView 
                                 android:id="@+id/j"

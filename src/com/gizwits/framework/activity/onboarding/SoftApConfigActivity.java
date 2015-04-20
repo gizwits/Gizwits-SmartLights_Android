@@ -407,7 +407,7 @@ public class SoftApConfigActivity extends BaseActivity implements OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (NetworkUtils.isWifiConnected(context) && NetworkUtils.getCurentWifiSSID(SoftApConfigActivity.this).contains("XPG-GAgent")) {
+            if (NetworkUtils.isWifiConnected(context) && NetworkUtils.getCurentSSID(SoftApConfigActivity.this).contains("XPG-GAgent")) {
                 handler.sendEmptyMessage(handler_key.CHANGE_WIFI.ordinal());
             }
 

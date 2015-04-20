@@ -101,4 +101,22 @@ public class NetworkUtils {
 		 }
 		 return ssid;
 	 }
+	 
+	 /**
+	 	 * 获取当前WIFI的SSID.
+	 	 *
+	 	 * @param context 上下文
+	 	 * @return ssid
+	 	 * 
+	 	 * *
+	 	 */
+		 public static String getCurentSSID(Context context){
+			 String ssid = "";
+			 if(context!=null){
+				 WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+				 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+				 ssid = wifiInfo.getSSID();
+			 }
+			 return ssid;
+		 }
 }

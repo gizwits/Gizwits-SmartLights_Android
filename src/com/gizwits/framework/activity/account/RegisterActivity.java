@@ -165,6 +165,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		 */
 		TOAST,
 
+		/**
+		 * 超时
+		 */
+		TIMEOUT,
+
 	}
 
 	/**
@@ -230,6 +235,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 			case TOAST:
 				ToastUtils.showShort(RegisterActivity.this, (String) msg.obj);
+				dialog.cancel();
+				break;
+				
+			case TIMEOUT:
+				ToastUtils.showShort(RegisterActivity.this, "超时");
 				dialog.cancel();
 				break;
 			}
@@ -417,6 +427,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			Log.e("Register", "phone=" + phone + ";code=" + code + ";password="
 					+ password);
 			dialog.show();
+			handler.sendEmptyMessageDelayed(handler_key.TIMEOUT.ordinal(), 10000);
 		} else {
 			String mail = etName.getText().toString().trim();
 			String password = etInputPsw.getText().toString();
@@ -435,6 +446,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			mCenter.cRegisterMailUser(mail, password);
 			Log.e("Register", "mail=" + mail + ";password=" + password);
 			dialog.show();
+			handler.sendEmptyMessageDelayed(handler_key.TIMEOUT.ordinal(), 10000);
 		}
 
 	}
@@ -473,6 +485,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void didRegisterUser(int error, String errorMessage, String uid,
 			String token) {
+		handler.removeMessages(handler_key.TIMEOUT.ordinal());
 		Log.i("error message uid token", error + " " + errorMessage + " " + uid
 				+ " " + token);
 		if (!uid.equals("") && !token.equals("")) {// 注册成功

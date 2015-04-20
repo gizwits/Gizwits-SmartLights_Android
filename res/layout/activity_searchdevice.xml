@@ -80,13 +80,14 @@
             android:id="@+id/btnAddQR"
             style="@style/ButtonBlue"
             android:text="@string/search_device_configure_qr_code"
+            android:visibility="gone"
             android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnAddGokit"
             style="@style/ButtonBlue"
             android:layout_margin="10dp"
-            android:text="@string/search_device_configure"
+            android:text="@string/search_centerctrl_configure"
             android:textSize="14sp" />
     </LinearLayout>
 

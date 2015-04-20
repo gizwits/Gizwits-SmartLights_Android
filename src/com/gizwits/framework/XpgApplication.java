@@ -43,5 +43,8 @@ public class XpgApplication extends Application {
 		// 设定日志打印级别,日志保存文件名，是否在后台打印数据.
 		XPGWifiSDK.sharedInstance().setLogLevel(Configs.LOG_LEVEL,
 				"BassApp.log", Configs.DEBUG);
+
+		XPGWifiSDK.sharedInstance().updateDeviceFromServer(Configs.PRODUCT_KEY);
+		XPGWifiSDK.sharedInstance().updateDeviceFromServer(Configs.PRODUCT_KEY_Sub);
 	}
 }
