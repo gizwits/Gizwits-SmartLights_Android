@@ -932,6 +932,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 							mXpgWifiDevice.getDid()))
 				mCenter.cDisconnect(theDevice);
 		}
+		for (GroupDevice theDevice : ledList) {
+			if (theDevice.getSubDevice().isConnected()
+					&& !theDevice.getSubDevice().getDid().equalsIgnoreCase(
+							mXpgWifiDevice.getDid()))
+				mCenter.cDisconnect(theDevice.getSubDevice());
+		}
 	}
 	
 	/*

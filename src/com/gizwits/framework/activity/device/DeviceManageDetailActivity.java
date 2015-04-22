@@ -135,6 +135,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 				DialogManager.dismissDialog(DeviceManageDetailActivity.this, progressDialog);
 				ToastUtils.showShort(DeviceManageDetailActivity.this, "修改失败:"
 						+ msg.obj.toString());
+				Log.e("111", "111");
 				break;
 
 			case DELETE_SUCCESS:
@@ -284,7 +285,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 	 */
 	@Override
 	protected void didBindDevice(int error, String errorMessage, String did) {
-		Log.d("Device扫描结果", "error=" + error + ";errorMessage=" + errorMessage
+		Log.e("Device扫描结果", "error=" + error + ";errorMessage=" + errorMessage
 				+ ";did=" + did);
 		handler.removeMessages(handler_key.TIMEOUT.ordinal());
 		if (error == 0) {
@@ -295,7 +296,7 @@ public class DeviceManageDetailActivity extends BaseActivity implements
 			msg.obj = errorMessage;
 			handler.sendMessage(msg);
 		}
-		
+		Log.e("bindEnd", "bindEnd");
 	}
 
 	/* (non-Javadoc)

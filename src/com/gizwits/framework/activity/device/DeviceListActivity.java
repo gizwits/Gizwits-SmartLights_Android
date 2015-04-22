@@ -135,11 +135,6 @@ public class DeviceListActivity extends BaseActivity implements
 		 * Exit the app.
 		 */
 		EXIT,
-		
-		/**
-		 * found time out.
-		 */
-		FOUND_TIMEOUT,
 
 	}
 
@@ -153,11 +148,6 @@ public class DeviceListActivity extends BaseActivity implements
 			switch (key) {
 			case FOUND:
 				lvDevices.completeRefreshing();
-				break;
-			case FOUND_TIMEOUT:
-				if (lvDevices.mIsRefreshing) {
-					lvDevices.completeRefreshing();
-				}
 				break;
 			case LOGIN_SUCCESS:
 				DialogManager.dismissDialog(DeviceListActivity.this, progressDialog);
@@ -248,8 +238,6 @@ public class DeviceListActivity extends BaseActivity implements
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				getList();
-				
-				handler.sendEmptyMessageDelayed(handler_key.FOUND_TIMEOUT.ordinal(), 10000);
 			}
 		});
 		progressDialog = new ProgressDialog(this);

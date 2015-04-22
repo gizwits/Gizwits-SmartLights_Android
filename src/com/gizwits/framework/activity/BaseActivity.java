@@ -159,6 +159,7 @@ public class BaseActivity extends Activity {
 
 		@Override
 		public void didBindDevice(int error, String errorMessage, String did) {
+			Log.e("bindDevice", "bindDevice");
 			BaseActivity.this.didBindDevice(error, errorMessage, did);
 		}
 
