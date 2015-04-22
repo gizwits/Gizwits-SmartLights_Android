@@ -253,6 +253,16 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		 * The device get status
 		 */
 		DEVICE_GETSTATUS,
+
+		/**
+		 * The device get status
+		 */
+		CMD_SWITCH,
+
+		/**
+		 * The device get status
+		 */
+		CMD_LIGHT,
 	}
 
 	/**
@@ -339,6 +349,12 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					mCenter.cDisconnect(mXpgWifiDevice);
 					DisconnectOtherDevice();
 				}
+				break;
+			case CMD_SWITCH:
+				mCenter.cSwitchOn((XPGWifiSubDevice) msg.obj, msg.arg1 == 0);
+				break;
+			case CMD_LIGHT:
+				mCenter.cLightness((XPGWifiSubDevice) msg.obj, msg.arg1);
 				break;
 			}
 		}
@@ -552,7 +568,11 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					for (int i = 0; i < groupMapList.get(selectGroup).size(); i++) {
 						for (int j = 0; j < ledList.size(); j++) {
 							if (ledList.get(j).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(i))) {
-								mCenter.cLightness(ledList.get(j).getSubDevice(), seekBar.getProgress());
+								Message msg = new Message();
+								msg.obj = ledList.get(j).getSubDevice();
+								msg.arg1 = seekBar.getProgress();
+								msg.what = handler_key.CMD_LIGHT.ordinal();
+								handler.sendMessageDelayed(msg, 250*i);
 								break;
 							}
 						}
@@ -639,11 +659,16 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				for (int i = 0; i < groupMapList.get(selectGroup).size(); i++) {
 					for (int j = 0; j < ledList.size(); j++) {
 						if (ledList.get(j).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(i))) {
+							Message msg = new Message();
+							msg.obj = ledList.get(j).getSubDevice();
+							msg.what = handler_key.CMD_SWITCH.ordinal();
 							if (btnSwitch.getText().toString().equals("关灯")){
-								mCenter.cSwitchOn(ledList.get(j).getSubDevice(), false);
+								msg.arg1 = 1;
 							}else{
-								mCenter.cSwitchOn(ledList.get(j).getSubDevice(), true);
+								msg.arg1 = 0;
 							}
+							
+							handler.sendMessageDelayed(msg, 250*i);
 						}
 					}
 				}
