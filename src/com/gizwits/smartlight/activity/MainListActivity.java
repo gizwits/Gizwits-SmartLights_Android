@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,6 +67,7 @@ import com.gizwits.framework.config.Configs;
 import com.gizwits.framework.config.JsonKeys;
 import com.gizwits.framework.entity.DeviceAlarm;
 import com.gizwits.framework.entity.GroupDevice;
+import com.gizwits.framework.sdk.CmdCenter;
 import com.gizwits.framework.utils.DensityUtil;
 import com.gizwits.framework.utils.DialogManager;
 import com.gizwits.framework.widget.RefreshableListView;
@@ -333,6 +335,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				isTimeOut = true;
 				progressDialog.cancel();
 				handler.sendEmptyMessage(handler_key.DISCONNECTED.ordinal());
+				if (mXpgWifiDevice != null && mXpgWifiDevice.isConnected()) {
+					mCenter.cDisconnect(mXpgWifiDevice);
+					DisconnectOtherDevice();
+				}
 				break;
 			}
 		}
@@ -374,6 +380,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		mCenter.cGetGroups(setmanager.getUid(), setmanager.getToken(), Configs.PRODUCT_KEY_Sub);//获取组
 		
 		bottomClose();
+		ledList.clear();
 		
 		showItemDevices.clear();
 		
@@ -439,7 +446,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		add.setBounds(0, 0, add.getMinimumWidth(), add.getMinimumHeight());
 		
 		statuMap = new ConcurrentHashMap<String, Object>();
-		//the normal data
+		
 		listViewSetNormal();
 		
 		mGroupAdapter = new GroupAdapter(this, mapList, list);
@@ -477,7 +484,7 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 		ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
 		ivEdit = (ImageView) findViewById(R.id.ivEdit);
-		ivEdit.setTag(1);
+		ivEdit.setTag("1");
 
 		sclContent = (RefreshableListView) findViewById(R.id.sclContent);
 
@@ -545,7 +552,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 					for (int i = 0; i < groupMapList.get(selectGroup).size(); i++) {
 						for (int j = 0; j < ledList.size(); j++) {
 							if (ledList.get(j).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(i))) {
-								Log.e("", ""+ledList.get(j).getSubDevice().getSubDid());
 								mCenter.cLightness(ledList.get(j).getSubDevice(), seekBar.getProgress());
 								break;
 							}
@@ -590,7 +596,6 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onRefresh(RefreshableListView listView) {
 				// TODO Auto-generated method stub
-//				getLedStatus();
 				mCenter.cGetSubDevicesList(centralControlDevice);
 				final Timer timer=new Timer();
 				timer.schedule(new TimerTask() {
@@ -634,13 +639,11 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 				for (int i = 0; i < groupMapList.get(selectGroup).size(); i++) {
 					for (int j = 0; j < ledList.size(); j++) {
 						if (ledList.get(j).getSubDevice().getSubDid().equals(groupMapList.get(selectGroup).get(i))) {
-							Log.e("", ""+ledList.get(j).getSubDevice().getSubDid());
 							if (btnSwitch.getText().toString().equals("关灯")){
 								mCenter.cSwitchOn(ledList.get(j).getSubDevice(), false);
 							}else{
 								mCenter.cSwitchOn(ledList.get(j).getSubDevice(), true);
 							}
-							break;
 						}
 					}
 				}
@@ -672,10 +675,10 @@ public class MainListActivity extends BaseActivity implements OnClickListener {
 			
 			if (ivEdit.getTag().toString().equals("1")) {
 				ivEdit.setImageResource(R.drawable.icon_confirm);
-				ivEdit.setTag(0);
+				ivEdit.setTag("0");
 			}else{
 				ivEdit.setImageResource(R.drawable.icon_edit_w);
-				ivEdit.setTag(1);
+				ivEdit.setTag("1");
 			}
 			
 			if (ivDels.size() < 1) {

@@ -1,25 +1,19 @@
-智能云空调
+智能云中控灯
 =============
 
-Gizwits Air Condition Android Demo App
+Gizwits Central Control LED Android Demo App
 
 功能介绍
 
 ▪这是一款使用XPGWifiSDK的开源代码示例APP，可以帮助开发者快速入手，使用XPGWifiSDK开发连接机智云的物联APP。
-▪该APP针对的是智能家电中的空调类产品。
+▪该APP针对的是智能家电中的中控类产品。
 
-▪包括了以下几点空调常用功能：
+▪包括了以下几点中控功能：
 
-1.空调电源的开关
-2.空调运行模式的切换，制冷，制热，抽湿，自动等
-3.空调制冷、制热温度的设置
-4.室内温度的获取
-5.空调风速的控制
-6.摆风功能开关
-7.定时开关机
-8.温度单位转换
-9.报警，故障的提示
-10.室内温度曲线（该功能属于定制功能，在开源App中未实现）
+1.子设备添加删除
+2.子设备控制
+3.分组添加删除修改
+4.分组控制
 
 ▪如果开发者希望开发的设备与以上功能类似，可参考或直接使用该APP进行修改进行快速开发自己的智能家电App。
 
@@ -29,7 +23,7 @@ Gizwits Air Condition Android Demo App
 2.机智云设备管理系统的AirLink配置入网、SoftAP配置入网，设备与账号绑定、解绑定，修改设备别名等功能
 3.机智云设备的登陆，控制指令发送，状态接收，设备连接断开等功能
 
-▪另外，因为该项目并没有相对应的实体硬件设备供开发者使用，因此还提供了扫描虚拟设备功能，通过扫描机智云实验室内相对应的虚拟设备，可进行设备的绑定和控制等功能。同时可免费申请gokit进行设备的配置入网和绑定等流程。
+▪另外，因为该项目不支持虚拟设备操控，所以只能通过申请中控设备进行配置入网和绑定操控等流程。
 
 项目依赖和安装
 
@@ -37,18 +31,15 @@ Gizwits Air Condition Android Demo App
 登录机智云官方网站http://gizwits.com的开发者中心，下载并解压最新版本的SDK。
 下载后，将解压后的目录拷贝到复制到 Android 项目 libs 目录即可。
 
-▪	Gokit设备
-使用机智云开发的Gokit设备并烧写相对应的产品标识码，可以体验设备配置上线等功能。
-
-▪	虚拟设备
-使用机智云实验室的相对应虚拟设备，可以体验设备指令收发，状态的获取等功能。
+▪	中控设备
+使用汉枫生产的中控产品eachone设备并烧写对应固件后，可体验设备配置上线，操控等功能。
 
 项目工程结构
 
 ▪包结构说明
-com.gizwits.centercontrolled                             -智能云空调独有代码，包含控制部分和侧边栏部分
-com.gizwits.centercontrolled.activity.control            -智能云空调控制界面activity
-com.gizwits.centercontrolled.activity.slipbar            -智能云空调侧边栏activity
+com.gizwits.smartlight                               -智能云中控灯独有代码，包含控制部分和侧边栏部分
+com.gizwits.smartlight.activity                    	 -智能云中控控制界面activity
+com.gizwits.smartlight.adapter					     -智能云中控主界面数据适配器
 
 com.gizwits.framework                                -机智云设备开源APP框架,包含除控制界面Activity外的代码，暂时机智云实验室中的其他开源APP所用框架一致
 com.gizwits.framework.activity                       -机智云设备开源APP框架相关activity
@@ -66,22 +57,14 @@ zxing                                                -第三方二维码扫描�
 
 使用流程
 
-▪虚拟设备＋app使用流程（体验指令发、状态获取等流程）
+▪eachone＋app使用流程（体验配置、绑定实体设备、指令发、状态获取等流程）
 
-1.在机智云官网上注册并登录帐号
-2.使用机智云实验室里面的智能云空调启动虚拟设备
-3.在app上注册并登录帐号
-4.通过扫描网页上的二维码添加虚拟设备
-5.进入控制界面与虚拟设备进行交互
-
-▪gokit＋app使用流程（体验配置、绑定实体设备等流程）
-
-1.免费申请gokit，http://gizwits.com/zh-cn/gokit
-2.下载gokit开源代码并按说明替换为智能云空调的产品标识码
-3.在app上注册并登录帐号
-4.通过我要配置gokit按钮，使用Airlink或SoftAP模式配置gokit入网
-5.绑定gokit
-6.进入控制界面
+1.在app上注册并登录帐号
+2.点击中控上发光圆圈，待圆圈中红灯闪烁，进入配对模式
+3.通过我要配置中控按钮，使用Airlink或SoftAP模式配置中控入网
+4.绑定中控
+5.进入控制界面
+6.将灯泡上电，灯泡光暗缓慢交替闪时，点击我的LED灯中ADD按钮配置灯泡
 
 
 问题反馈

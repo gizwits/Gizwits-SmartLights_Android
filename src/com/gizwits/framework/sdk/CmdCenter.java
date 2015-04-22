@@ -294,31 +294,31 @@ public class CmdCenter {
 	//
 	// =================================================================
 
-	/**
-	 * 发送指令.
-	 * 
-	 * @param xpgWifiDevice
-	 *            the xpg wifi device
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	public void cWrite(XPGWifiDevice xpgWifiDevice, String key, Object value) {
-
-		try {
-			final JSONObject jsonsend = new JSONObject();
-			JSONObject jsonparam = new JSONObject();
-			jsonsend.put("cmd", 1);
-			jsonparam.put(key, value);
-			jsonsend.put(JsonKeys.KEY_ACTION, jsonparam);
-			Log.i("sendjson", jsonsend.toString());
-			xpgWifiDevice.write(jsonsend.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-	}
+//	/**
+//	 * 发送指令.
+//	 * 
+//	 * @param xpgWifiDevice
+//	 *            the xpg wifi device
+//	 * @param key
+//	 *            the key
+//	 * @param value
+//	 *            the value
+//	 */
+//	public void cWrite(XPGWifiDevice xpgWifiDevice, String key, Object value) {
+//
+//		try {
+//			final JSONObject jsonsend = new JSONObject();
+//			JSONObject jsonparam = new JSONObject();
+//			jsonsend.put("cmd", 1);
+//			jsonparam.put(key, value);
+//			jsonsend.put(JsonKeys.KEY_ACTION, jsonparam);
+//			Log.i("sendjson", jsonsend.toString());
+//			xpgWifiDevice.write(jsonsend.toString());
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 	
 	/**
 	 * 发送指令.
@@ -362,37 +362,37 @@ public class CmdCenter {
 		xpgWifiSubDevice.write(json.toString());
 	}
 
-	/**
-	 * 获取设备状态.
-	 * 
-	 * @param xpgWifiDevice
-	 *            the xpg wifi device
-	 */
-	public void cGetStatus(XPGWifiDevice xpgWifiDevice) {
-		JSONObject json = new JSONObject();
-		try {
-			json.put("cmd", 2);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		xpgWifiDevice.write(json.toString());
-	}
+//	/**
+//	 * 获取设备状态.
+//	 * 
+//	 * @param xpgWifiDevice
+//	 *            the xpg wifi device
+//	 */
+//	public void cGetStatus(XPGWifiDevice xpgWifiDevice) {
+//		JSONObject json = new JSONObject();
+//		try {
+//			json.put("cmd", 2);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		xpgWifiDevice.write(json.toString());
+//	}
 	
-	/**
-	 * 获取设备状态.
-	 * 
-	 * @param xpgWifiDevice
-	 *            the xpg wifi device
-	 */
-	public void cSubGetStatus(XPGWifiSubDevice xpgWifiDevice) {
-		JSONObject json = new JSONObject();
-		try {
-			json.put("cmd", 2);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		xpgWifiDevice.write(json.toString());
-	}
+//	/**
+//	 * 获取设备状态.
+//	 * 
+//	 * @param xpgWifiDevice
+//	 *            the xpg wifi device
+//	 */
+//	public void cSubGetStatus(XPGWifiSubDevice xpgWifiDevice) {
+//		JSONObject json = new JSONObject();
+//		try {
+//			json.put("cmd", 2);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		xpgWifiDevice.write(json.toString());
+//	}
 
 	/**
 	 * 断开连接.

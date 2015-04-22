@@ -73,9 +73,6 @@ public class GroupAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
     	// TODO Auto-generated method stub
-    	if (mainListActivity.ivEdit.getTag().toString().equals("0")) {//若开启编辑模式，不可点击item项
-			return false;
-		}
     	if (position == 0 || position == 1 || position == 2) {//前三项item不可点击
 			return false;
 		}
@@ -388,7 +385,7 @@ public class GroupAdapter extends BaseAdapter {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {//若开启编辑模式，不可点击led项
 				return;
 			}
 			
@@ -420,6 +417,9 @@ public class GroupAdapter extends BaseAdapter {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
+			if (mainListActivity.ivEdit.getTag().toString().equals("0")) {//若开启编辑模式，不可点击item项
+				return;
+			}
 			String groupName = v.getTag().toString();
 			boolean isShowOk = false;
 			//分组控制中底部菜单弹出,并且获取现有的ledlist中包含group的第一设备状态
