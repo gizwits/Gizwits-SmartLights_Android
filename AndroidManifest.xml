@@ -66,10 +66,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name="com.gizwits.framework.activity.onboarding.BindingDeviceActivity" 
             android:screenOrientation="portrait"/>
-        <activity android:name="com.gizwits.framework.activity.onboarding.ConfigFailedActivity" 
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.gizwits.framework.activity.onboarding.GetPassAndBind" 
-            android:screenOrientation="portrait"/>
         <activity
             android:name="com.gizwits.framework.activity.onboarding.SearchDeviceActivity"
             android:launchMode="singleTask" 
