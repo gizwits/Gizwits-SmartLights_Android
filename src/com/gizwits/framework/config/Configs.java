@@ -34,11 +34,11 @@ public class Configs {
 	public static final boolean DEBUG = true;
 	
 	/**  设定AppID，参数为机智云官网中查看产品信息得到的AppID. */
-	public static final String APPID = "cd02e08ec2634fc88ff1c9a567d88025";
+	public static final String APPID = "your_app_id";
 	
 	/**  指定该app对应设备的product_key，如果设定了过滤，会过滤出该peoduct_key对应的设备. */
-	public static final String PRODUCT_KEY = "a350195b4d814890aaffde668e02668d";
-	public static final String PRODUCT_KEY_Sub = "b536db9b15c941c681f983e3c1a8dc1f";
+	public static final String PRODUCT_KEY = "your_product_key";
+	public static final String PRODUCT_KEY_Sub = "your_sub_product_key";
 	
 	/**  设定日志打印级别. */
 	public static final XPGWifiLogLevel LOG_LEVEL = XPGWifiLogLevel.XPGWifiLogLevelAll;
