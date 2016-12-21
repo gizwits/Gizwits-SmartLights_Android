@@ -1,7 +1,7 @@
 智能云智能灯
 =============
 
-    此公版开源App正在维护中，近期不再更新。机智云已经推出了物联开源框架，并提供了其他开源案例供参考。机智云公版开源App项目地址：
+    此公版开源App正在维护中，近期不再更新。机智云已经推出了物联开源框架，并提供了其他开源案例供参考。机智云公版开源App项目地址：
     
     机智云物联开源框架Android Studio项目 https://github.com/gizwits/GOpenSource_AppKit_Android_AS
     机智云物联开源框架Eclipse项目 https://github.com/gizwits/GizOpenSource_AppKit_Android
@@ -94,4 +94,4 @@ Gizwits Smart Light Android Demo App
 问题反馈
 
     您可以给机智云的技术支持人员发送邮件，反馈您在使用过程中遇到的任何问题。
-    邮箱：club@gizwits.com
+    邮箱：club@gizwits.com
